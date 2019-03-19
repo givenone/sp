@@ -21,7 +21,7 @@ int get_callinfo(char *fname, size_t fnlen, unsigned long long *ofs)
   int r;
   unw_context_t context;
   unw_getcontext(&context);
- // unw_init_local(&cursor, &context);
- // r = unw_get_proc_name(&cursor, fname, fnlen, (unw_word_t *) ofs);
-  return -1;
+  unw_init_local(&cursor, &context);
+  r = unw_get_proc_name(&cursor, fname, fnlen, (unw_word_t *) ofs);
+  return r;
 }
