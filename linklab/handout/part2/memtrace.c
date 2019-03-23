@@ -60,14 +60,20 @@ void fini(void)
   LOG_STATISTICS(n_allocb,
   n_allocb / (n_malloc + n_calloc + n_realloc), n_freeb);
   
-  LOG_NONFREED_START()
+
 //  LOG_BLOCK(ptr, size, cnt, fn, ofs)
 
+    int  bool_for_nonfreestart = 1;
   item *prev = list;
 
   while (prev != NULL) {
     if(prev->cnt != 0)
     {
+        if(bool_for_nonfreestart)
+        {
+            bool_for_nonfreestart = 0;
+              LOG_NONFREED_START();
+        }
       LOG_BLOCK(prev->ptr, prev->size, prev->cnt, prev->fname, prev->ofs);
     }
     prev = prev->next;
@@ -119,15 +125,41 @@ void *realloc(void *ptr, size_t size)
 {
   reallocp = dlsym(RTLD_NEXT, "realloc");
 
-  void *newptr = reallocp(ptr, size);
+    int old_size = -1;
   
+  item *prev = list;
+  while(prev != NULL)
+  {
+      if(prev -> ptr == ptr)
+      {
+          old_size = prev->size;
+          break;
+      }
+      prev = prev->next;
+  }
+
+    void *newptr;
+    if(old_size == -1)
+    {
+        newptr = reallocp(NULL, size);
+    }
+    else if(old_size - size >= 0 )
+    {
+        n_freeb += old_size - size;
+        newptr = reallocp(ptr, size);
+    }
+    else
+    {      
+        newptr = reallocp(ptr, size);
+    }
+
   LOG_REALLOC(ptr, size, newptr);
 
   dealloc(list, ptr);
   alloc(list, newptr, size);
 
-
-  n_calloc++;
+  
+  n_realloc++;
   n_allocb += (size);
 
   return newptr;
