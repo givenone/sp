@@ -60,14 +60,20 @@ void fini(void)
   LOG_STATISTICS(n_allocb,
   n_allocb / (n_malloc + n_calloc + n_realloc), n_freeb);
   
-  LOG_NONFREED_START()
+
 //  LOG_BLOCK(ptr, size, cnt, fn, ofs)
 
+    int  bool_for_nonfreestart = 1;
   item *prev = list;
 
   while (prev != NULL) {
     if(prev->cnt != 0)
     {
+        if(bool_for_nonfreestart)
+        {
+            bool_for_nonfreestart = 0;
+              LOG_NONFREED_START();
+        }
       LOG_BLOCK(prev->ptr, prev->size, prev->cnt, prev->fname, prev->ofs);
     }
     prev = prev->next;
@@ -89,8 +95,7 @@ void *malloc(size_t size)
   void *ptr = mallocp(size);
 
   LOG_MALLOC((int) size, ptr);
-
-  alloc(list, ptr, size);
+  alloc(list, ptr, size); // insert or update size and counter
   
   n_malloc++;
   n_allocb += size;
@@ -106,7 +111,6 @@ void *calloc(size_t nmemb, size_t size)
 
   void *ptr = callocp(nmemb, size);
   LOG_CALLOC((int) nmemb, (int) size, ptr);
-
   alloc(list, ptr, size * nmemb);
 
   n_calloc++;
@@ -119,10 +123,10 @@ void *realloc(void *ptr, size_t size)
 {
   reallocp = dlsym(RTLD_NEXT, "realloc");
 
-    int old_size = -1;
+  int old_size = -1;
   
   item *prev = list;
-  while(prev != NULL)
+  while(prev != NULL) // get old size of ptr , if not allocated : -1
   {
       if(prev -> ptr == ptr)
       {
@@ -136,23 +140,30 @@ void *realloc(void *ptr, size_t size)
     if(old_size == -1)
     {
         newptr = reallocp(NULL, size);
+        //dealloc(list, ptr);
+        alloc(list, newptr, size);
+
     }
-    else if(old_size - size >= 0 )
+    else if(old_size - (int)size >= 0 )
     {
         n_freeb += old_size - size;
         newptr = reallocp(ptr, size);
+            
+        dealloc(list, ptr);
+        alloc(list, newptr, size);
+     
+  
     }
     else
     {      
         newptr = reallocp(ptr, size);
+    
+        dealloc(list, ptr);
+        alloc(list, newptr, size);
+      
     }
 
   LOG_REALLOC(ptr, size, newptr);
-
-  dealloc(list, ptr);
-  alloc(list, newptr, size);
-
-  
   n_realloc++;
   n_allocb += (size);
 
@@ -174,6 +185,7 @@ void free(void *ptr)
   if(temp != NULL)
   {
     dealloc(list, ptr);
+
     n_freeb += temp -> size;
   }
 

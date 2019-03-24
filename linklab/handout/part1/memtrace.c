@@ -113,7 +113,7 @@ void *realloc(void *ptr, size_t size)
   
   LOG_REALLOC(ptr, size, newptr);
 
-  n_calloc++;
+  n_realloc++;
   n_allocb += (size);
 
   return newptr;
