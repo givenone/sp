@@ -148,11 +148,7 @@ void *realloc(void *ptr, size_t size)
         n_freeb += old_size - size;
         newptr = reallocp(ptr, size);
         
-        if( newptr == ptr )
-        {
-            alloc(list, newptr, size);
-        }
-        else
+
         {
             dealloc(list, ptr);
             alloc(list, newptr, size);
@@ -163,11 +159,7 @@ void *realloc(void *ptr, size_t size)
     {      
         newptr = reallocp(ptr, size);
         
-        if( newptr == ptr )
-        {
-            alloc(list, newptr, size);
-        }
-        else
+    
         {
             dealloc(list, ptr);
             alloc(list, newptr, size);

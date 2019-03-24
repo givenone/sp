@@ -135,11 +135,20 @@ void *realloc(void *ptr, size_t size)
       }
       prev = prev->next;
   }
-
-    void *newptr;
-    if(old_size == -1)
+  void *newptr;
+    if(prev -> cnt == 0)
+    {
+        LOG_DOUBLE_FREE();
+        newptr = reallocp(NULL, size);
+        // already freed block
+        alloc(list, newptr, size);
+    }
+  
+    else if(old_size == -1)
     {
         newptr = reallocp(NULL, size);
+        // not available block
+        LOG_ILL_FREE();
         //dealloc(list, ptr);
         alloc(list, newptr, size);
 
@@ -152,7 +161,6 @@ void *realloc(void *ptr, size_t size)
         dealloc(list, ptr);
         alloc(list, newptr, size);
      
-  
     }
     else
     {      
