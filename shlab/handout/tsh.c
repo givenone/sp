@@ -1,7 +1,8 @@
 /* 
  * tsh - A tiny shell program with job control
  * 
- * <Put your student number and login ID here>
+ * 2017-19428 서준원
+ * stu123@sp1.snucse.org
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -165,6 +166,68 @@ int main(int argc, char **argv)
 */
 void eval(char *cmdline) 
 {
+
+    char *argv[MAXARGS];
+
+    int bg = parseline(cmdline,argv); // is background?
+    sigset_t mask;
+    if(!builtin_cmd(argv)) //builtin 아닐 경우 실행 -> fork child
+    {
+        if(sigemptyset(&mask) <0)
+        {
+            unix_error("System Call Error");
+            exit(0);
+        }
+        if (sigaddset(&mask, SIGCHLD) < 0)
+        {
+            unix_error("System Call Error");
+            exit(0);
+        }
+        if(sigprocmask(SIG_BLOCK, &mask, NULL) <0)
+        {
+            unix_error("System Call Error");
+            exit(0);
+        }
+
+        pid_t pid;
+        if( (pid = fork()) == 0) // child
+        {
+            
+            if(sigprocmask(SIG_UNBLOCK, &mask, NULL) < 0)
+            {
+                unix_error("System Call Error");
+                exit(0);
+            }
+            setpgid(0,0); // 현재 child의 PID로 PGID 만든다. -> Assignment Guide
+            if(execve(argv[0],argv,environ) < 0)
+            {
+                printf("%s: Command not found.\n", argv[0]);
+                exit(0);
+            }
+        }
+
+        if(!bg)
+        {//foreground -> wait pid
+            addjob(jobs, pid, FG, cmdline);
+            if(sigprocmask(SIG_UNBLOCK, &mask, NULL) < 0)
+            {
+                unix_error("System Call Error");
+                exit(0);
+            }
+            waitfg(pid);
+        }
+        else
+        {//background -> No wait, but PRINT
+            addjob(jobs, pid, BG, cmdline);
+
+            if(sigprocmask(SIG_UNBLOCK, &mask, NULL) < 0)
+            {
+                unix_error("System Call Error");
+                exit(0);
+            }
+            printf("[%d] (%d) %s", pid2jid(pid), pid, cmdline);
+        }
+    }
     return;
 }
 
@@ -228,25 +291,112 @@ int parseline(const char *cmdline, char **argv)
 /* 
  * builtin_cmd - If the user has typed a built-in command then execute
  *    it immediately.  
+ * 
+ * builtin cmd: Recognizes and interprets the built-in commands: quit, fg, bg, and jobs. [25 lines]
  */
 int builtin_cmd(char **argv) 
 {
+    if(strcmp(argv[0], "quit") == 0)
+    {
+        exit(0);
+    }
+
+    else if(strcmp(argv[0], "fg") == 0 || strcmp(argv[0], "bg") == 0)
+    {
+        do_bgfg(argv);
+        return 1;
+    }
+
+    else if(strcmp(argv[0], "jobs") == 0)
+    {
+        listjobs(jobs);
+        return 1;
+    }
+
+
     return 0;     /* not a builtin command */
 }
 
 /* 
  * do_bgfg - Execute the builtin bg and fg commands
+ * • bg <job>: Change a stopped background job to a running background job. 
+ * • fg <job>: Change a stopped or running background job to a running in the foreground.
  */
 void do_bgfg(char **argv) 
 {
-    return;
+    struct job_t *temp;
+
+    if(argv[1] == NULL)
+    { // No Argument
+        printf("%s command requires PID or %%jobid argument\n", argv[0]);
+        return;
+    }
+
+    if(argv[1][0] == '%')
+    { // by job id
+        int jobID = atoi(&argv[1][1]);
+        temp = getjobjid(jobs, jobID);
+        if(temp == NULL)
+        {
+            printf("%s: No such job\n", argv[1]); 
+            return;
+        }
+    }
+    else if(isdigit(argv[1][0]))
+    { // by PID
+        pid_t pid = atoi(argv[1]);
+        temp = getjobpid(jobs, pid);
+        if(temp == NULL)
+        {
+            printf("(%d): No such process\n", pid); 
+            return;
+        }
+    }
+    else
+    {
+        printf("%s: argument must be a PID or %%jobid\n", argv[0]);
+        return;
+    }
+
+    if(kill(-temp->pid, SIGCONT) < 0)
+    {
+        unix_error("System Call Error");
+        exit(0);
+    } // RESTART , no - is ok!
+
+    if(strcmp(argv[0], "fg") == 0)
+    {
+        temp->state = FG;
+        waitfg(temp->pid);
+    }
+    else
+    {
+        printf("[%d] (%d) %s", temp->jid, temp->pid, temp->cmdline);
+        temp->state = BG;
+    }
+    
 }
 
 /* 
- * waitfg - Block until process pid is no longer the foreground process
+ * 
+ *  Waits for a foreground job to complete
  */
 void waitfg(pid_t pid)
-{
+{//eval에서 실행됨
+// waitfg - Block until process pid is no longer the foreground process
+
+    struct job_t *temp;
+
+    temp = getjobpid(jobs, pid);
+
+    if(pid == 0)
+    { // child
+        return;
+    }
+    if(temp != NULL)
+    { 
+        while(pid == fgpid(jobs)){/*sleep*/}
+    }
     return;
 }
 
@@ -263,6 +413,31 @@ void waitfg(pid_t pid)
  */
 void sigchld_handler(int sig) 
 {
+    // use exactly one call to waitpid
+    pid_t pid;
+    int status;
+    int jobID;
+    while((pid = waitpid(fgpid(jobs), &status, WNOHANG|WUNTRACED)) > 0)
+    {
+        if(WIFSTOPPED(status)/*child가 정지된 상태*/)
+        {
+            getjobpid(jobs, pid)->state = ST;
+            jobID = pid2jid(pid);
+            printf("Job [%d] (%d) stopped by signal %d\n", jobID, pid, WSTOPSIG(status));
+            //print
+        }
+        else if(WIFSIGNALED(status)/*child is signaled*/)
+        {
+            jobID = pid2jid(pid);
+            printf("Job [%d] (%d) terminated by signal %d\n", jobID, pid, WTERMSIG(status));
+            //print
+            deletejob(jobs, pid);
+        }
+        else if(WIFEXITED(status)/*child is Exited*/)
+        {
+            deletejob(jobs, pid);
+        }
+    }
     return;
 }
 
@@ -272,7 +447,17 @@ void sigchld_handler(int sig)
  *    to the foreground job.  
  */
 void sigint_handler(int sig) 
-{
+{// foreground의 process를 종료
+    pid_t pid = fgpid(jobs);
+
+    if(pid != 0)
+    {
+        if(kill(-pid, sig)<0)
+        {
+            unix_error("System Call Error");
+            exit(0);
+        }
+    }
     return;
 }
 
@@ -283,6 +468,15 @@ void sigint_handler(int sig)
  */
 void sigtstp_handler(int sig) 
 {
+    pid_t pid = fgpid(jobs);
+    if(pid != 0)
+    {
+        if(kill(-pid, sig)<0)
+        {
+            unix_error("System Call Error");
+            exit(0);
+        }
+    }
     return;
 }
 
