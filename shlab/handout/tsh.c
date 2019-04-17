@@ -417,7 +417,7 @@ void sigchld_handler(int sig)
     pid_t pid;
     int status;
     int jobID;
-    while((pid = waitpid(fgpid(jobs), &status, WNOHANG|WUNTRACED)) > 0)
+    while((pid = waitpid(-1/*fgpid(jobs)*/, &status, WNOHANG|WUNTRACED)) > 0)
     {
         if(WIFSTOPPED(status)/*child가 정지된 상태*/)
         {
