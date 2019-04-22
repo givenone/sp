@@ -3,12 +3,13 @@
 
 int main(void)
 {
-  void *a;
+  void *a, *b, *c;
 
   
   a = malloc(10);
-  a = realloc(a, 100);
-  a = realloc(a, 1000);
+  b = realloc(a, 100);
+  c = realloc(a, 1000);
+  c = calloc(10, 4);
   a = realloc(a, 10000);
   a = realloc(a, 100000);
   free(a);

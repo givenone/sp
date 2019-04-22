@@ -1,4 +1,6 @@
 /*
+*   2017-19428 Seo Junwon Malloc Lab
+
         <Block Info>
         31                     3  2  1  0
  *      -----------------------------------
@@ -18,16 +20,16 @@
  *      -----------------------------------
  *     | s i   ...   z    e       0  0  a/f  -> <header>:: size of the block & "allocated?"" one bit
  *      -----------------------------------
- *     |    pointer to its predecessor in Segregated list -> Can access via Macro
+ *     |    pointer to its predecessor in Segregated seg_num -> Can access via Macro
  *     |-----------------------------------    
- *     |     pointer to its successor in Segregated list -> Can access via Macro
+ *     |     pointer to its successor in Segregated seg_num -> Can access via Macro
  *     |
  *     ...
  *     |___________________________________
  *     | s i   ...   z    e       0  0  a/f   -> <footer>
  *      ------------------------------------
  * 
- *      Free List : Segregated List (Array size of "LIST_COUNT")
+ *      Free seg_num : Segregated seg_num (Array size of "LIST_COUNT")
  *      - partition the block by block size
  * 
  *    <Heap Overview>
@@ -92,11 +94,11 @@
 #define PRED_PTR(ptr) ((char *)(ptr))
 #define SUCC_PTR(ptr) ((char *)(ptr) + WSIZE)
 
-// Address of free block's predecessor and successor on the segregated list 
+// Address of free block's predecessor and successor on the segregated seg_num 
 #define PRED(ptr) (*(char **)(ptr))
 #define SUCC(ptr) (*(char **)(SUCC_PTR(ptr)))
 
-void **free_list; // segregated list
+void **free_list; // segregated seg_num
 char *heap_list; // for heap consistency check : pointer to the first block 
 static void *extend_heap(size_t size);
 static void *coalesce(void *ptr);
@@ -107,15 +109,15 @@ static int mm_check();
 
 static int mm_check()
 {
-    // Is every block in the free list marked as free?
+    // Is every block in the free seg_num marked as free?
 
-    for(int list = 0; list < LIST_COUNT ; list++)
+    for(int seg_num = 0; seg_num < LIST_COUNT ; seg_num++)
     {
-        void *head = free_list[list];
+        void *head = free_list[seg_num];
         while(head != NULL)
         {
                         
-    // Do the pointers in the free list point to valid free block?
+    // Do the pointers in the free seg_num point to valid free block?
 
             if(GET_ALLOC(HDRP(head)))
             {
@@ -175,8 +177,9 @@ static int mm_check()
             flag = 0;
         }
     }
-    // Is every free block actually in free list?
+    // Is every free block actually in free seg_num?
     // return 0 if consistent
+    return 0;
 }
 /*
 * extend heap using mem_sbrk function
@@ -199,19 +202,19 @@ static void *extend_heap(size_t size)
     return coalesce(ptr);
 }
 /*
-* insert free block in segregated list
-* segregated list is ascending order, list managed in order of size
+* insert free block in segregated seg_num
+* segregated seg_num is ascending order, seg_num managed in order of size
 */
 static void insertion(void *ptr, size_t size) {
 
-    int list = 0;
-    while ((list < LIST_COUNT - 1) && (size > 1)) {
-        size >>= 1;
-        list++;
+    int seg_num = 0;
+    while ((seg_num < LIST_COUNT - 1) && (size > 1)) {
+        size /= 2;
+        seg_num++;
     }
     
     // ascending order and search
-    void *head = free_list[list];
+    void *head = free_list[seg_num];
     void *prev = NULL;
     while ((head != NULL) && (size > GET_SIZE(HDRP(head)))) {
         prev = head;
@@ -219,60 +222,61 @@ static void insertion(void *ptr, size_t size) {
     }
 
     if (head != NULL) {
-        if (prev != NULL) {
+        if (prev == NULL) {
+            SET_PTR(PRED_PTR(ptr), head);
+            SET_PTR(SUCC_PTR(head), ptr);
+            SET_PTR(SUCC_PTR(ptr), NULL);
+            free_list[seg_num] = ptr;
+        } else {
             SET_PTR(PRED_PTR(ptr), head);
             SET_PTR(SUCC_PTR(head), ptr);
             SET_PTR(SUCC_PTR(ptr), prev);
             SET_PTR(PRED_PTR(prev), ptr);
-        } else {
-            SET_PTR(PRED_PTR(ptr), head);
-            SET_PTR(SUCC_PTR(head), ptr);
-            SET_PTR(SUCC_PTR(ptr), NULL);
-            free_list[list] = ptr;
         }
     } else {
-        if (prev != NULL) {
+        if (prev == NULL) {
+            SET_PTR(PRED_PTR(ptr), NULL);
+            SET_PTR(SUCC_PTR(ptr), NULL);
+            free_list[seg_num] = ptr;
+        } else {
             SET_PTR(PRED_PTR(ptr), NULL);
             SET_PTR(SUCC_PTR(ptr), prev);
             SET_PTR(PRED_PTR(prev), ptr);
-        } else {
-            SET_PTR(PRED_PTR(ptr), NULL);
-            SET_PTR(SUCC_PTR(ptr), NULL);
-            free_list[list] = ptr;
         }
     }
 }
 
-/* delete free block in segregated list
-*  free blocks are managed as doubly linked list
+/* delete free block in segregated seg_num
+*  free blocks are managed as doubly linked seg_num
 */
 static void deletion(void *ptr) {
     
     size_t size = GET_SIZE(HDRP(ptr));
-        // Select segregated list 
-    int list = 0;
-    while ((list < LIST_COUNT - 1) && (size > 1)) {
-        size >>= 1;
-        list++;
+        // Select segregated seg_num 
+    int seg_num = 0;
+    while ((seg_num < LIST_COUNT - 1) && (size > 1)) {
+        seg_num++;
+        size /= 2;     
     }
     
-    if (PRED(ptr) != NULL) {
-        if (SUCC(ptr) != NULL) {
-            SET_PTR(SUCC_PTR(PRED(ptr)), SUCC(ptr));
-            SET_PTR(PRED_PTR(SUCC(ptr)), PRED(ptr));
-        } else {
-            SET_PTR(SUCC_PTR(PRED(ptr)), NULL);
-            free_list[list] = PRED(ptr);
-        }
-    } else {
-        if (SUCC(ptr) != NULL) {
-            SET_PTR(PRED_PTR(SUCC(ptr)), NULL);
-        } else {
-            free_list[list] = NULL;
-        }
+    if(PRED(ptr) != NULL && SUCC(ptr) !=NULL)
+    {
+        SET_PTR(SUCC_PTR(PRED(ptr)), SUCC(ptr));
+        SET_PTR(PRED_PTR(SUCC(ptr)), PRED(ptr));
     }
-    
-    return;
+    else if(PRED(ptr)== NULL && SUCC(ptr) !=NULL)
+    {
+        SET_PTR(PRED_PTR(SUCC(ptr)), NULL);
+    }
+    else if(PRED(ptr) != NULL && SUCC(ptr) ==NULL)
+    {
+        SET_PTR(SUCC_PTR(PRED(ptr)), NULL);
+        free_list[seg_num] = PRED(ptr);
+    }
+    else
+    {
+        free_list[seg_num] = NULL;
+    }
 }
 
 // coalesce = reference :: textbook
@@ -316,7 +320,7 @@ static void *coalesce(void *ptr)
 
 /* split free block when allocation
 *  free block size is equal or larger than newly allocated block
-*  So split free block and update free block list
+*  So split free block and update free block seg_num
 */
 static void *replace(void *ptr, size_t new_size)
 {
@@ -365,9 +369,9 @@ int mm_init(void)
 
     //heap_list = heap_start;//for consistency check
     PUT(heap_start, 0);                            /* Alignment padding */
-    PUT(heap_start + (1 * WSIZE), PACK(DSIZE, 1)); /* Prologue header */
-    PUT(heap_start + (2 * WSIZE), PACK(DSIZE, 1)); /* Prologue footer */
-    PUT(heap_start + (3 * WSIZE), PACK(0, 1));     /* Epilogue header */
+    PUT(heap_start + (WSIZE), PACK(DSIZE, 1)); /* Prologue header */
+    PUT(heap_start + (WSIZE * 2), PACK(DSIZE, 1)); /* Prologue footer */
+    PUT(heap_start + (WSIZE * 3), PACK(0, 1));     /* Epilogue header */
     extend_heap(CHUNKSIZE);
     return 0;
 }
@@ -385,14 +389,13 @@ void *mm_malloc(size_t size)
     if (size == 0)
         return NULL;
 
-    // Search for free block in segregated list
-
+    // Search for free block in segregated seg_num
     void *ptr = NULL;
     size_t searchsize = new_size;
-    for (int list = 0; list < LIST_COUNT; list++) 
+    for (int seg_num = 0; seg_num < LIST_COUNT; seg_num++) 
     {
-        if ((list == LIST_COUNT - 1/*Last List */) || ((searchsize <= 1) && (free_list[list] != NULL))) {
-            ptr = free_list[list];
+        if (((searchsize <= 1) && (free_list[seg_num] != NULL))||(seg_num == LIST_COUNT - 1/*Last seg_num */)) {
+            ptr = free_list[seg_num];
             while ((ptr != NULL) && ((new_size > GET_SIZE(HDRP(ptr)))))
             {
                 ptr = PRED(ptr);
@@ -400,14 +403,16 @@ void *mm_malloc(size_t size)
             if (ptr != NULL)
                 break;
         }
-        searchsize >>= 1;
+        searchsize /= 2;
     }
 
     if (ptr == NULL) 
     { // extend if no free block
          extendsize = MAX(new_size, CHUNKSIZE);
         if ((ptr = extend_heap(extendsize)) == NULL)
+         {
             return NULL;
+         }   
     }   
     // replace and divide block
     ptr = replace(ptr, new_size);
@@ -456,7 +461,7 @@ void *mm_realloc(void *ptr, size_t size)
                 remain += MAX(-remain, CHUNKSIZE);
             }
             
-            deletion(NEXT_BLKP(ptr)); // delete in the free block list
+            deletion(NEXT_BLKP(ptr)); // delete in the free block seg_num
             // Do not split block
             PUT(HDRP(ptr), PACK(new_size + remain, 1)); 
             PUT(FTRP(ptr), PACK(new_size + remain, 1)); 
