@@ -7,9 +7,19 @@
 
 /* You won't lose style points for including this long line in your code */
 static const char *user_agent_hdr = "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:10.0.3) Gecko/20120305 Firefox/10.0.3\r\n";
+static const char *init_version = "HTTP/1.0\r\n";
+static const char *connection = "Connection: close\r\n";
+static const char *proxy_connection = "Proxy-Connection: close\r\n";
 
+
+/* Is it used? */
+static const char *accept_str = "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
+static const char *accept_encoding = "Accept-Encoding: gzip, deflate\r\n";
+
+/* function definitions */
 void server_connection(int fd);
 int parse_line(char* host, char* filename, char* URI, int* port);
+int request_client(rio_t *rio_client, char *str, int client_fd, int port, char* host, char* filename, char *method, char* version);
 
 int main(int argc, char **argv)
 {
@@ -17,10 +27,9 @@ int main(int argc, char **argv)
     unsigned int clientlen;
     
     port = atoi(argv[1]);
-    printf("juwnon");
+    printf("%s %s", argv[0], argv[1]);
     listenfd = Open_listenfd(port);
     struct sockaddr_in client_addr;
-
 
     // ignore SIGPIPE
     Signal(SIGPIPE, SIG_IGN);
@@ -37,23 +46,23 @@ int main(int argc, char **argv)
     }
 }
 
-void server_connection(int fd)
+void server_connection(int clientfd)
 {
     //Pthread_detach(Pthread_self());
 
     int port;
-    char line[MAXLINE], host[MAXLINE], filename[MAXLINE], METHOD[MAXLINE], URI[MAXLINE], VERSION[MAXLINE];
-
+    char line[MAXLINE], host[MAXLINE], filename[MAXLINE], method[MAXLINE], URI[MAXLINE], version[MAXLINE];
+    char client_str[MAXLINE];
     rio_t r;
 
-    Rio_readinitb(&r, fd);
+    Rio_readinitb(&r, clientfd);
     Rio_readlineb(&r, line, MAXLINE);
-    sscanf(line, "%s %s %s", METHOD, URI, VERSION);
+    sscanf(line, "%s %s %s", method, URI, version);
 
     printf("%s", line);
 
     // only get request comes
-    if(strcasecmp(METHOD, "GET"))
+    if(strcasecmp(method, "GET"))
     {
         //error generation
     }
@@ -63,7 +72,21 @@ void server_connection(int fd)
         //error generation
     }
 
-    int clinetfd = Open_clientfd(host, port); // redirect to host
+    //int clientfd = Open_clientfd(host, port); // redirect to host
+    request_client(&r, client_str, clientfd, port, host, filename, method, version);
+
+    int serverfd;
+    forward_to_server(host, port, serverfd, client_str);
+
+    read_and_forward_response(serverfd, clientfd);
+
+    
+    if(clientfd >=0)
+		Close(clientfd);
+		
+	if(serverfd >=0)
+		Close(serverfd);
+/*
     Rio_writen(clinetfd, line, strlen(line));
     // already read line
     while(strcmp(line, "\r\n"))
@@ -72,9 +95,115 @@ void server_connection(int fd)
         Rio_writen(clinetfd, line, strlen(line));
         printf("%s", line);
     }
-
-
+*/
     
+}
+
+
+/*
+part 1 :: sequential
+
+1. Read Request from client
+2. parse
+3. forward to server
+4. forward response to client
+5. close all fd.
+*/
+
+int request_client(rio_t *rio_client, char *str, int client_fd, int port, char* host,
+ char* filename, char *method, char* version)
+{
+    char tmpstr[MAXBUF];
+	
+    if (strstr(method, "GET")) {
+		strcpy(str, method);
+		strcat(str, " ");
+		strcat(str, filename);
+		strcat(str, " ");
+		strcat(str, init_version);
+    
+
+        if(strlen(host))
+	    {
+		    strcpy(tmpstr, "Host: ");
+		    strcat(tmpstr, host);
+		    strcat(tmpstr, ":");
+		    strcat(tmpstr, port);
+		    strcat(tmpstr, "\r\n");
+		    strcat(str, tmpstr);
+	    }
+		
+		strcat(str, user_agent_hdr);
+		strcat(str, accept_str);
+		strcat(str, accept_encoding);
+		strcat(str, connection);
+		strcat(str, proxy_connection);
+		
+		while(Rio_readlineb(rio_client, tmpstr, MAXBUF) > 0) {
+			if (!strcmp(tmpstr, "\r\n")){
+				strcat(str,"\r\n");
+				break;
+			}
+			else if(strstr(tmpstr, "User-Agent:") || strstr(tmpstr, "Accept:") ||
+				strstr(tmpstr, "Accept-Encoding:") || strstr(tmpstr, "Connection:") ||
+				strstr(tmpstr, "Proxy Connection:") || strstr(tmpstr, "Cookie:"))
+				continue;
+			else if (strstr(tmpstr, "Host:")) {
+				if (!strlen(host)) {
+					strcpy(tmpstr, "Host: ");
+					strcat(tmpstr, host);
+					strcat(tmpstr, ":");
+					strcat(tmpstr, port);
+					strcat(tmpstr, "\r\n");
+					strcat(str, tmpstr);
+				}
+			}
+			else
+				strcat(str, tmpstr);
+		}
+		
+		return 0;
+    }
+	return 1;    
+}
+
+int read_and_forward_response(int server_fd, int client_fd) {
+		
+	
+	char tmp_str[MAXBUF], content[MAX_OBJECT_SIZE];
+	unsigned int size = 0, len = 0, cache_size = 0;
+	int valid_size = 1;
+	
+	content[0] = '\0';
+
+	rio_t rio_server;
+	Rio_readinitb(&rio_server, server_fd);
+	
+    while (len = Rio_readlineb(&rio_server, tmp_str, MAXLINE) != 0) {
+
+        //printf("Fd = %d, Sum = %d, n = %d\n", mio_internet.mio_fd, sum, n);
+        size += len;
+        if (size <= MAX_OBJECT_SIZE)
+            strcat(content, tmp_str);
+        Rio_writen(client_fd, tmp_str, len);
+	}
+
+	return 0;
+}
+
+int forward_to_server(char *host, int port, int *server_fd, char *request_str) 
+{
+	*server_fd = Open_clientfd(host, port);
+	
+	if (*server_fd < 0) {
+		if (*server_fd == -1)
+			return -1;
+		else 
+			return -2;
+	}
+    Rio_writen(*server_fd, request_str, strlen(request_str));
+
+	return 0;
 }
 
 int parse_line(char* host, char* filename, char* URI, int* port)
