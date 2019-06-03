@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "csapp.h"
+#include "cache.h"
 
 /* Recommended max cache and object sizes */
 #define MAX_CACHE_SIZE 1049000
@@ -17,40 +18,61 @@ static const char *accept_str = "Accept: text/html,application/xhtml+xml,applica
 static const char *accept_encoding = "Accept-Encoding: gzip, deflate\r\n";
 
 /* function definitions */
-void server_connection(int fd);
-int parse_line(char* host, char* filename, char* URI, int* port);
-int request_client(rio_t *rio_client, char *str, int client_fd, int port, char* host, char* filename, char *method, char* version);
+void server_connection(void *vargp);
+int parse_line(char* host, char* filename, char* URI, char* port);
+int forward_to_server(char *host, char* port, int *server_fd, char *request_str);
+int read_and_forward_response(int server_fd, int client_fd, char* uri);
+int request_client(rio_t *rio_client, char *str, int client_fd, char* port, char* host, char* filename, char *method, char* version);
+
+/*
+1. Cache Hit을 체크 -> Hit이면 바로 Return
+    cache_block *ptr;
+    	if((ptr = find_cache_block(uri)) != NULL) {
+		printf("It is cached\n\n");
+		Rio_writen(fd, ptr->response, strlen(ptr->response));
+		Rio_writen(fd, ptr->content, ptr->content_size);
+		return;
+	}
+2. Cache Miss인 경우 -> caching
+: read_request & read_forward_response 에 caching 부분 추가.
+*/
+
+
 
 int main(int argc, char **argv)
 {
     int listenfd, connfd, port;
     unsigned int clientlen;
     
-    port = atoi(argv[1]);
-    printf("%s %s", argv[0], argv[1]);
-    listenfd = Open_listenfd(port);
+    listenfd = Open_listenfd(argv[1]);
+    //printf("2 : ok now on \n");
     struct sockaddr_in client_addr;
+
+    Signal(SIGPIPE, SIG_IGN);
 
     // ignore SIGPIPE
     Signal(SIGPIPE, SIG_IGN);
+    init();
+
     while(1) {
         
         clientlen = sizeof(struct sockaddr_in);
 
-        connfd = Accept(listenfd, (SA *) &client_addr, &clientlen);
-
-        //Pthread_create(&tid, NULL, (void *)server_connection, (void *)connfdp);
-        server_connection(connfd);
-        Close(connfd);
-
+        pthread_t tid;
+		int *connfdp = Malloc(sizeof(int));
+		*connfdp = -1;
+		*connfdp = Accept(listenfd, (SA *) &client_addr, (socklen_t *)&clientlen);
+		Pthread_create(&tid, NULL, (void *)server_connection, (void *)connfdp);
     }
 }
 
-void server_connection(int clientfd)
-{
-    //Pthread_detach(Pthread_self());
 
-    int port;
+void server_connection(void *vargp)
+{
+    Pthread_detach(Pthread_self());
+
+    int clientfd = *((int *) vargp);
+    char port[MAXLINE];
     char line[MAXLINE], host[MAXLINE], filename[MAXLINE], method[MAXLINE], URI[MAXLINE], version[MAXLINE];
     char client_str[MAXLINE];
     rio_t r;
@@ -59,61 +81,59 @@ void server_connection(int clientfd)
     Rio_readlineb(&r, line, MAXLINE);
     sscanf(line, "%s %s %s", method, URI, version);
 
-    printf("%s", line);
+    printf("request : %s\n", line);
+    printf("method : %s\n", method);
+    printf("uri : %s\n", URI);
+    printf("http version : %s\n", version);
 
     // only get request comes
     if(strcasecmp(method, "GET"))
     {
-        //error generation
+        return; //error generation
     }
     // parse
-    if(!parse_line(host, filename, URI, &port))
+    if(!parse_line(host, filename, URI, port))
     {
-        //error generation
+        return; //error generation
     }
 
-    //int clientfd = Open_clientfd(host, port); // redirect to host
+    cnode *temp;
+    if( (temp = find(URI)) != NULL )
+    {
+        printf("Cache Hit \n");
+        Rio_writen(clientfd, temp->object, strlen(temp->object));
+        printf("forward to client : ok now on \n");
+        if(clientfd >=0)
+		    Close(clientfd);
+        return;
+    }
+
+
     request_client(&r, client_str, clientfd, port, host, filename, method, version);
+    printf("read request : ok now on \n");
+    printf("%s \n", client_str);
 
     int serverfd;
-    forward_to_server(host, port, serverfd, client_str);
+    forward_to_server(host, port, &serverfd, client_str);
+    printf("forwarding ok : ok now on \n");
 
-    read_and_forward_response(serverfd, clientfd);
+    read_and_forward_response(serverfd, clientfd, URI);
 
-    
+    printf("forward to client : ok now on \n");
     if(clientfd >=0)
 		Close(clientfd);
 		
 	if(serverfd >=0)
 		Close(serverfd);
-/*
-    Rio_writen(clinetfd, line, strlen(line));
-    // already read line
-    while(strcmp(line, "\r\n"))
-    {
-        Rio_readlineb(&r, line, MAXLINE);
-        Rio_writen(clinetfd, line, strlen(line));
-        printf("%s", line);
-    }
-*/
     
 }
 
 
-/*
-part 1 :: sequential
-
-1. Read Request from client
-2. parse
-3. forward to server
-4. forward response to client
-5. close all fd.
-*/
-
-int request_client(rio_t *rio_client, char *str, int client_fd, int port, char* host,
+int request_client(rio_t *rio_client, char *str, int client_fd, char* port, char* host,
  char* filename, char *method, char* version)
 {
     char tmpstr[MAXBUF];
+    char tmpport[MAXBUF];
 	
     if (strstr(method, "GET")) {
 		strcpy(str, method);
@@ -144,20 +164,6 @@ int request_client(rio_t *rio_client, char *str, int client_fd, int port, char* 
 				strcat(str,"\r\n");
 				break;
 			}
-			else if(strstr(tmpstr, "User-Agent:") || strstr(tmpstr, "Accept:") ||
-				strstr(tmpstr, "Accept-Encoding:") || strstr(tmpstr, "Connection:") ||
-				strstr(tmpstr, "Proxy Connection:") || strstr(tmpstr, "Cookie:"))
-				continue;
-			else if (strstr(tmpstr, "Host:")) {
-				if (!strlen(host)) {
-					strcpy(tmpstr, "Host: ");
-					strcat(tmpstr, host);
-					strcat(tmpstr, ":");
-					strcat(tmpstr, port);
-					strcat(tmpstr, "\r\n");
-					strcat(str, tmpstr);
-				}
-			}
 			else
 				strcat(str, tmpstr);
 		}
@@ -167,11 +173,11 @@ int request_client(rio_t *rio_client, char *str, int client_fd, int port, char* 
 	return 1;    
 }
 
-int read_and_forward_response(int server_fd, int client_fd) {
+int read_and_forward_response(int server_fd, int client_fd, char *uri) {
 		
 	
 	char tmp_str[MAXBUF], content[MAX_OBJECT_SIZE];
-	unsigned int size = 0, len = 0, cache_size = 0;
+	unsigned int size = 0, len = 0;
 	int valid_size = 1;
 	
 	content[0] = '\0';
@@ -179,7 +185,7 @@ int read_and_forward_response(int server_fd, int client_fd) {
 	rio_t rio_server;
 	Rio_readinitb(&rio_server, server_fd);
 	
-    while (len = Rio_readlineb(&rio_server, tmp_str, MAXLINE) != 0) {
+    while ((len = Rio_readlineb(&rio_server, tmp_str, MAXLINE)) != 0) {
 
         //printf("Fd = %d, Sum = %d, n = %d\n", mio_internet.mio_fd, sum, n);
         size += len;
@@ -188,10 +194,13 @@ int read_and_forward_response(int server_fd, int client_fd) {
         Rio_writen(client_fd, tmp_str, len);
 	}
 
+    add_cache(uri, content);
+    printf("Added Cache\n");
+
 	return 0;
 }
 
-int forward_to_server(char *host, int port, int *server_fd, char *request_str) 
+int forward_to_server(char *host, char *port, int *server_fd, char *request_str)  
 {
 	*server_fd = Open_clientfd(host, port);
 	
@@ -206,18 +215,17 @@ int forward_to_server(char *host, int port, int *server_fd, char *request_str)
 	return 0;
 }
 
-int parse_line(char* host, char* filename, char* URI, int* port)
+int parse_line(char* host, char* filename, char* URI, char* port)
 {
     if(sscanf(URI, "http://%[^/]%s", host, filename) != 2) // except "/"
         return 0;
 
 	// substring -> parsing
 	if(strstr(host, ":")) {
-		if(sscanf(host, "%*[^:]:%d", port) != 1) return 0; // * means "excpet ..."
+		if(sscanf(host, "%*[^:]:%s", port) != 1) return 0; // * means "excpet ..."
 		if(sscanf(host, "%[^:]", host) != 1) return 0;
 	}
-	else *port = 80;
-
+	else strcpy(port, "80");
 	return 1;
 }
 
