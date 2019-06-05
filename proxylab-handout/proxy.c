@@ -147,11 +147,16 @@ int request_client(rio_t *rio_client, char *str, int client_fd, char* port, char
 		strcat(str, connection);
 		strcat(str, proxy_connection);
 		
+        printf("\\\\\\\\\\\\\\\\\\\\\n");
 		while(Rio_readlineb(rio_client, tmpstr, MAXBUF) > 0) {
+            printf("%s\n", tmpstr);
 			if (!strcmp(tmpstr, "\r\n")){
 				strcat(str,"\r\n");
 				break;
 			}
+            else if(strstr(tmpstr, "User-Agent:") || strstr(tmpstr, "Connection:") ||
+				strstr(tmpstr, "Proxy Connection:") || strstr(tmpstr, "Host:")  )
+				continue;
 			else
 				strcat(str, tmpstr);
 		}
@@ -174,7 +179,7 @@ int read_and_forward_response(int server_fd, int client_fd, char *uri) {
 	Rio_readinitb(&rio_server, server_fd);
 	
     while ((len = Rio_readlineb(&rio_server, tmp_str, MAXLINE)) != 0) {
-
+        printf("%s\n", tmp_str);
         //printf("Fd = %d, Sum = %d, n = %d\n", mio_internet.mio_fd, sum, n);
         size += len;
         if (size <= MAX_OBJECT_SIZE)
