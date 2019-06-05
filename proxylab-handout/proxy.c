@@ -161,9 +161,23 @@ int request_client(rio_t *rio_client, char *str, int client_fd, char* port, char
 		
 		while(Rio_readlineb(rio_client, tmpstr, MAXBUF) > 0) {
 			if (!strcmp(tmpstr, "\r\n")){
-                printf("%s \n", tmpstr);
+                //printf("%s \n", tmpstr);
 				strcat(str,"\r\n");
 				break;
+			}
+            else if(strstr(tmpstr, "User-Agent:") || strstr(tmpstr, "Accept:") ||
+				strstr(tmpstr, "Accept-Encoding:") || strstr(tmpstr, "Connection:") ||
+				strstr(tmpstr, "Proxy Connection:") || strstr(tmpstr, "Cookie:"))
+				continue;
+			else if (strstr(tmpstr, "Host:")) {
+				if (!strlen(host)) {
+					strcpy(tmpstr, "Host: ");
+					strcat(tmpstr, host);
+					strcat(tmpstr, ":");
+					strcat(tmpstr, port);
+					strcat(tmpstr, "\r\n");
+					strcat(str, tmpstr);
+				}
 			}
 			else
 				strcat(str, tmpstr);
