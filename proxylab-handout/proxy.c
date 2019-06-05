@@ -12,6 +12,9 @@ static const char *init_version = "HTTP/1.0\r\n";
 static const char *connection = "Connection: close\r\n";
 static const char *proxy_connection = "Proxy-Connection: close\r\n";
 
+static const char *accept_str = "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
+static const char *accept_encoding = "Accept-Encoding: gzip, deflate\r\n";
+
 /* function definitions */
 void server_connection(void *vargp);
 int parse_line(char* host, char* filename, char* URI, char* port);
@@ -149,6 +152,10 @@ int request_client(rio_t *rio_client, char *str, int client_fd, char* port, char
 	    }
 		
 		strcat(str, user_agent_hdr);
+
+        strcat(str, accept_str);
+		strcat(str, accept_encoding);
+
 		strcat(str, connection);
 		strcat(str, proxy_connection);
 		
