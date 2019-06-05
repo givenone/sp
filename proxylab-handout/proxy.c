@@ -12,11 +12,6 @@ static const char *init_version = "HTTP/1.0\r\n";
 static const char *connection = "Connection: close\r\n";
 static const char *proxy_connection = "Proxy-Connection: close\r\n";
 
-
-/* Is it used? */
-static const char *accept_str = "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
-static const char *accept_encoding = "Accept-Encoding: gzip, deflate\r\n";
-
 /* function definitions */
 void server_connection(void *vargp);
 int parse_line(char* host, char* filename, char* URI, char* port);
@@ -37,8 +32,6 @@ int request_client(rio_t *rio_client, char *str, int client_fd, char* port, char
 : read_request & read_forward_response 에 caching 부분 추가.
 */
 
-
-
 int main(int argc, char **argv)
 {
     int listenfd, connfd, port;
@@ -48,12 +41,9 @@ int main(int argc, char **argv)
     //printf("2 : ok now on \n");
     struct sockaddr_in client_addr;
 
-    Signal(SIGPIPE, SIG_IGN);
-
     // ignore SIGPIPE
     Signal(SIGPIPE, SIG_IGN);
-    init();
-
+    init(); // cache initialization
     while(1) {
         
         clientlen = sizeof(struct sockaddr_in);
@@ -136,7 +126,8 @@ int request_client(rio_t *rio_client, char *str, int client_fd, char* port, char
     char tmpport[MAXBUF];
 	
     if (strstr(method, "GET")) {
-		strcpy(str, method);
+        strncpy(str, method, strlen(method) + 1);
+		//strcpy(str, method);
 		strcat(str, " ");
 		strcat(str, filename);
 		strcat(str, " ");
@@ -145,7 +136,7 @@ int request_client(rio_t *rio_client, char *str, int client_fd, char* port, char
 
         if(strlen(host))
 	    {
-		    strcpy(tmpstr, "Host: ");
+		    strncpy(tmpstr, "Host: ", strlen("Host: ") + 1);
 		    strcat(tmpstr, host);
 		    strcat(tmpstr, ":");
 		    strcat(tmpstr, port);
@@ -154,13 +145,12 @@ int request_client(rio_t *rio_client, char *str, int client_fd, char* port, char
 	    }
 		
 		strcat(str, user_agent_hdr);
-		strcat(str, accept_str);
-		strcat(str, accept_encoding);
 		strcat(str, connection);
 		strcat(str, proxy_connection);
 		
 		while(Rio_readlineb(rio_client, tmpstr, MAXBUF) > 0) {
-			if (!strcmp(tmpstr, "\r\n")){
+			if (!strncmp(tmpstr, "\r\n", strlen("\r\n"))){
+                printf("%s \n", tmpstr);
 				strcat(str,"\r\n");
 				break;
 			}
