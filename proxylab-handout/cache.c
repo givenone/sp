@@ -15,7 +15,7 @@ cnode *find(char *uri)
     for(temp = front; temp != NULL; temp = temp->next)
     {
         printf("uri: %s \n THIS IS CACHE", temp-> uri);
-        if(!strncmp(temp->uri, uri, sizeof(uri)))
+        if(!strncmp(temp->uri, uri, strlen(uri)))
         {   // cache HIT -> should be back
 
             if(temp == front)
@@ -70,7 +70,7 @@ void add_cache(char *uri, char *content)
 	new_block = (cnode *) Malloc(sizeof(cnode));
 
 	// Copy data to new block
-	strncpy(new_block->uri, uri, sizeof(uri));
+	strncpy(new_block->uri, uri, strlen(uri) + 1);
 	memcpy(new_block->object, content, strlen(content));
 	new_block->content_size = strlen(content);
 	new_block->next = NULL;
