@@ -128,11 +128,11 @@ int request_client(rio_t *rio_client, char *str, int client_fd, char* port, char
     char tmpstr[MAXBUF];
     char tmpport[MAXBUF];
 	
-    str[0] = '\0';
+    //str[0] = '\0';
 
     if (strstr(method, "GET")) {
-        strcat(str, method);
-		//strcpy(str, method);
+        //strcat(str, method);
+		strcpy(str, method);
 		strcat(str, " ");
 		strcat(str, filename);
 		strcat(str, " ");
@@ -142,8 +142,8 @@ int request_client(rio_t *rio_client, char *str, int client_fd, char* port, char
         tmpstr[0] = '\0';
         if(strlen(host))
 	    {
-//		    strncpy(tmpstr, "Host: ", strlen("Host: ") + 1);
-            strcat(tmpstr, "Host: ");
+		    strcpy(tmpstr, "Host: ");
+            //strcat(tmpstr, "Host: ");
 		    strcat(tmpstr, host);
 		    strcat(tmpstr, ":");
 		    strcat(tmpstr, port);
