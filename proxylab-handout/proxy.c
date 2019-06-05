@@ -12,6 +12,8 @@ static const char *init_version = "HTTP/1.0\r\n";
 static const char *connection = "Connection: close\r\n";
 static const char *proxy_connection = "Proxy-Connection: close\r\n";
 
+
+/* Is it used? */
 static const char *accept_str = "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
 static const char *accept_encoding = "Accept-Encoding: gzip, deflate\r\n";
 
@@ -35,6 +37,8 @@ int request_client(rio_t *rio_client, char *str, int client_fd, char* port, char
 : read_request & read_forward_response 에 caching 부분 추가.
 */
 
+
+
 int main(int argc, char **argv)
 {
     int listenfd, connfd, port;
@@ -44,9 +48,12 @@ int main(int argc, char **argv)
     //printf("2 : ok now on \n");
     struct sockaddr_in client_addr;
 
+    Signal(SIGPIPE, SIG_IGN);
+
     // ignore SIGPIPE
     Signal(SIGPIPE, SIG_IGN);
-    init(); // cache initialization
+    init();
+
     while(1) {
         
         clientlen = sizeof(struct sockaddr_in);
@@ -128,10 +135,7 @@ int request_client(rio_t *rio_client, char *str, int client_fd, char* port, char
     char tmpstr[MAXBUF];
     char tmpport[MAXBUF];
 	
-    //str[0] = '\0';
-
     if (strstr(method, "GET")) {
-        //strcat(str, method);
 		strcpy(str, method);
 		strcat(str, " ");
 		strcat(str, filename);
@@ -139,11 +143,9 @@ int request_client(rio_t *rio_client, char *str, int client_fd, char* port, char
 		strcat(str, init_version);
     
 
-        tmpstr[0] = '\0';
         if(strlen(host))
 	    {
 		    strcpy(tmpstr, "Host: ");
-            //strcat(tmpstr, "Host: ");
 		    strcat(tmpstr, host);
 		    strcat(tmpstr, ":");
 		    strcat(tmpstr, port);
@@ -152,32 +154,15 @@ int request_client(rio_t *rio_client, char *str, int client_fd, char* port, char
 	    }
 		
 		strcat(str, user_agent_hdr);
-
-        strcat(str, accept_str);
+		strcat(str, accept_str);
 		strcat(str, accept_encoding);
-
 		strcat(str, connection);
 		strcat(str, proxy_connection);
 		
 		while(Rio_readlineb(rio_client, tmpstr, MAXBUF) > 0) {
 			if (!strcmp(tmpstr, "\r\n")){
-                //printf("%s \n", tmpstr);
 				strcat(str,"\r\n");
 				break;
-			}
-            else if(strstr(tmpstr, "User-Agent:") || strstr(tmpstr, "Accept:") ||
-				strstr(tmpstr, "Accept-Encoding:") || strstr(tmpstr, "Connection:") ||
-				strstr(tmpstr, "Proxy Connection:") || strstr(tmpstr, "Cookie:"))
-				continue;
-			else if (strstr(tmpstr, "Host:")) {
-				if (!strlen(host)) {
-					strcpy(tmpstr, "Host: ");
-					strcat(tmpstr, host);
-					strcat(tmpstr, ":");
-					strcat(tmpstr, port);
-					strcat(tmpstr, "\r\n");
-					strcat(str, tmpstr);
-				}
 			}
 			else
 				strcat(str, tmpstr);
@@ -243,5 +228,3 @@ int parse_line(char* host, char* filename, char* URI, char* port)
 	else strcpy(port, "80");
 	return 1;
 }
-
-
