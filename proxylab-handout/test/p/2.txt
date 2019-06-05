@@ -1,0 +1,26 @@
+<html>
+<head>
+
+<title>www.ugrad.cs.cmu.edu</title>
+
+</head>
+<body>
+
+<p>
+This webserver hosts several apps in support of the undergraduate 
+<a href="http://www.csd.cs.cmu.edu">Computer Science</a> program within the
+<a href="http://www.cs.cmu.edu">School of Computer Science</a> at
+<a href="http://www.cmu.edu">Carnegie Mellon University</a>.
+</p>
+
+<ul>
+<li>The <a href="https://www.ugrad.cs.cmu.edu/ta/">Computer Science Teaching Assistant Request/Application</a> page.</li>
+<li><a href="https://www.ugrad.cs.cmu.edu/tareservations/">To reserve a table in the Citadel Teaching Commons to hold office hours (TA resource).</a></li>
+<li></li>
+</ul>
+
+<A HREF="https://www.cmu.edu/legal/">Carnegie Mellon University Legal Information</A>
+
+</body>
+</html>
+

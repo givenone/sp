@@ -1,0 +1,807 @@
+
+    
+
+
+
+
+
+<!doctype html>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="Author" content="">
+	<meta name="description" content="SK공식 홈페이지입니다. 기업문화, 역사, SUPEX추구협의회 및 계열사 정보, 채용안내, 사회공헌 활동 소개">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<script src="/lib/plugin/jquery-1.11.1.min.js"></script>
+	<!-- 크로스브라우징 -->
+	<!--[if lt IE 9]>
+	<script src="./lib/plugin/html5shiv.min.js"></script>
+	<![endif]-->
+	<link rel="stylesheet" href="/lib/fonts/fonts.css" />
+	<link rel="stylesheet" href="/lib/plugin/slick.css" />
+	<link rel="stylesheet" href="/lib/plugin/datepicker/datepicker.css"><!-- 달력 스타일 -->
+	<link rel="stylesheet" href="/lib/style/common.css?ver=19040502" /><!--mib190405 ver 추가 -->
+	<link rel="stylesheet" href="/lib/style/contents.css?ver=19040502" /><!--mib190405 ver 추가 -->
+	<link rel="stylesheet" href="/lib/style/sub.css?ver=19040502" /><!--mib190405 ver 추가 -->
+	<title>SK</title>
+	<link rel="shortcut icon" type="image/x-icon" href="/lib/images/common/logo_32x32.png" />
+	<link rel="image_src" href="http://www.sk.co.kr/lib/images/common/sk_image.png" />
+	<link rel="canonical" href="http://www.sk.co.kr">
+	<link rel="icon" href="/lib/images/common/logo_192x192.png" />
+	<link rel="apple-touch-icon-precomposed" href="/lib/images/common/logo_180x180.png" />
+	<meta name="msapplication-TileImage" content="/lib/images/common/logo_270x270.png" />
+	<meta name="naver-site-verification" content="c32beaab50ad6e214abfd49b7361bf500adcd76e"/>
+	<meta name="robots" content="index,follow">
+	<!-- 페이스북 -->
+	<meta property="fb:app_id" content="Write facebook developer's app_id number" />
+	<meta property="og:title" content="SK" />
+	<meta property="og:site_name" content="SK" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="http://www.sk.co.kr" />
+	<meta property="og:description" content="SK공식 홈페이지입니다. 기업문화, 역사, SUPEX추구협의회 및 계열사 정보, 채용안내, 사회공헌 활동 소개" />
+	<meta property="og:image" content="http://www.sk.co.kr/lib/images/common/sk_facebook.png" />
+	<meta property="og:image:width" content="182" />
+	<meta property="og:image:height" content="182" />
+	<!-- 트위터 -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:site" content="@skstory_blog" />
+	<meta name="twitter:creator" content="@skstory_blog" />
+	<meta name="twitter:url" content="http://www.sk.co.kr" />
+	<meta name="twitter:title" content="SK" />
+	<meta name="twitter:description" content="SK공식 홈페이지입니다. 기업문화, 역사, SUPEX추구협의회 및 계열사 정보, 채용안내, 사회공헌 활동 소개" />
+	<meta name="twitter:image" content="http://www.sk.co.kr/lib/images/common/sk_image.png" />
+	<script type="application/ld+json">
+		{
+			"@context": "http://schema.org",
+			"@type": "Person",
+			"name": "SK",
+			"url": "http://www.sk.co.kr",
+			"sameAs": [
+				"https://www.facebook.com/mediask",
+				"https://twitter.com/skstory_blog",
+				"http://mediask.co.kr",
+				"https://post.naver.com/mediask_post"
+			]
+		}
+	 </script>
+	 <script>
+		 var nschbtn = false;
+	 
+	 	//브라우저 체크
+		(function(){
+			$(document).ready(function(){
+				var $agents = [/(opr|opera)/gim,/(chrome)/gim,/(firefox)/gim,/(safari)/gim,/(msie[\s]+[\d]+)/gim,/(trident).*rv:(\d+)/gim];
+				var $agent = navigator.userAgent.toLocaleLowerCase();
+				for(var ag in $agents){
+					if($agent.match($agents[ag])){
+						$(document.body).addClass(String(RegExp.$1+RegExp.$2).replace(/opr/,'opera').replace(/trident/,'msie').replace(/\s+/,''));
+						break;
+					}
+				}
+			});
+		})();
+	 </script>	
+</head>
+<body  class="main">
+	<!-- ie9 이상 지원 안내 시작 -->
+	<!--[if lt IE 9]><div class="legacy-browser">
+	<div class="legacy-pad"><p>현재 사용중인 브라우저는 지원이 중단된 브라우저입니다.<br>	원활한 온라인 서비스를 위해 브라우저를 <a href="http://windows.microsoft.com/ko-kr/internet-explorer/ie-11-worldwide-languages" target="_blank">최신 버전</a>으로 업데이트 해주시길 바랍니다.	</p></div>
+	</div><![endif]--><!-- //ie9 이상 지원 안내 끝 -->
+	
+	<!-- 스킵 네비 시작 -->
+	<div class="skipNav_wrap">
+		<a href="#skipContent" class="skipNav">본문 영역 바로가기</a>
+		<a href="#skipSites" class="skipNav only_desktop">검색, 소셜미디어, 언어변경, 패미리사이트 영역 바로가기</a>
+	</div><!--//스킵 네비 끝-->
+	
+	<!-- 공통 헤더 시작 -->
+	<header class="layout_header">
+		<div class="layout_header_inner">
+			<!-- 모바일 메뉴 -->
+			<a href="#sideMenu_AREA" id="topMobile_btn_AREA" class="layout_topMobile_btn" title="모바일 메뉴열기"></a>
+			<!-- 로고 -->
+			<h1 class="logo" id="logo">
+				<a href="/ko/index.jsp" class="logo_a"><img src="/lib/images/desktop/logo.png" alt="SK" class="logo_img" title="홈으로"></a>
+			</h1>
+			<!-- 탑 네비 -->
+			<nav class="layout_topNav">
+				<h1 class="blind" id="skipGnb">전체 메뉴</h1>
+				<div class="layout_topNavSub_bg"></div>
+				<ul class="topNav_ul">
+					<li class="topNav_li topNav_about">
+						<a href="/ko/about/about.jsp" class="topNav_a"><h2>SK소개</h2></a>
+						<ul class="topNavSub_ul">
+							<li class="topNavSub_li topNavSub_history"><a href="/ko/about/history.jsp" class="topNavSub_a">SK역사</a></li>
+							<li class="topNavSub_li topNavSub_skms"><a href="/ko/about/skms.jsp" class="topNavSub_a">SKMS</a></li>
+							<li class="topNavSub_li topNavSub_supex"><a href="/ko/about/supex.jsp" class="topNavSub_a">SUPEX추구협의회</a></li>
+							<li class="topNavSub_li topNavSub_affiliates"><a href="/ko/about/affiliates.jsp" class="topNavSub_a">계열사</a></li>
+						</ul>
+					</li>
+					<li class="topNav_li topNav_media">
+						<a href="/ko/media/media.jsp" class="topNav_a"><h2>MEDIA센터</h2></a>
+						<ul class="topNavSub_ul">
+							<li class="topNavSub_li topNavSub_news"><a href="/ko/media/news.jsp" class="topNavSub_a">SK뉴스</a></li>
+							<li class="topNavSub_li topNavSub_channel"><a href="/ko/media/channel.jsp" class="topNavSub_a">소셜미디어</a></li>
+							<li class="topNavSub_li topNavSub_ci"><a href="/ko/media/ci.jsp" class="topNavSub_a">CI</a></li>
+						</ul>
+					</li>
+					<li class="topNav_li topNav_together">
+						<!-- mib190405 텍스트 수정// --><a href="/ko/together/together.jsp" class="topNav_a"><h2>사회적 가치</h2></a><!-- //mib190405 텍스트 수정 -->
+						<ul class="topNavSub_ul">
+							<!-- mib190405 텍스트 수정// --><li class="topNavSub_li topNavSub_happiness"><a href="/ko/together/happiness.jsp" class="topNavSub_a">사회적 가치 추구</a></li><!-- //mib190405 텍스트 수정 -->
+							<li class="topNavSub_li topNavSub_social"><a href="/ko/together/social.jsp" class="topNavSub_a">사회적 기업</a></li>
+							<li class="topNavSub_li topNavSub_programs"><a href="/ko/together/programs.jsp" class="topNavSub_a">사회공헌 프로그램</a></li>
+							<li class="topNavSub_li topNavSub_foundation"><a href="/ko/together/foundation.jsp" class="topNavSub_a">재단활동</a></li>
+						</ul>
+					</li>
+					<li class="topNav_li topNav_careers">
+						<a href="/ko/careers/careers.jsp" class="topNav_a"><h2>채용</h2></a>
+						<ul class="topNavSub_ul">
+							<li class="topNavSub_li topNavSub_person"><a href="/ko/careers/person.jsp" class="topNavSub_a">인재상</a></li>
+							<li class="topNavSub_li topNavSub_policy"><a href="/ko/careers/policy.jsp" class="topNavSub_a">채용제도</a></li>
+							<!-- <li class="topNavSub_li topNavSub_notice"><a href="/ko/careers/notice.jsp" class="topNavSub_a">채용공고</a></li> -->
+						</ul>
+					</li>
+				</ul>
+			</nav>
+			<!-- 소셜미디어, 언어 변경, 패미리사이트 -->
+			<div class="layout_linksArea">
+				<p class="skipArea" id="skipSites" tabindex="0">검색, 언어 변경, 패미리사이트</p>
+				<!-- 검색 영역 -->
+				<div class="linkSearch_area">
+					<button class="linkSearch_btn" title="SK뉴스 검색"></button>
+					<form id="schNews" name="schNews" method="post" action="/ko/media/news.jsp">
+						<label for="s_gnbSearch" class="blind">SK뉴스를 검색하세요.</label>
+						<input type="hidden" name="s_kind" value="t1.subject">
+						<input type="text" id="s_gnbSearch" name="s_value" class="linkSearch_input" placeholder="SK뉴스를 검색하세요."  maxlength="30"/>
+						<input type="reset" class="linkDelete_btn" title="검색어 모두 삭제" value="">
+						<input type="submit" class="linkSearch_submit" title="검색 요청" id="schNewsBtn"/>
+					</form>
+				</div>
+				<!-- 소셜미디어 링크 -->
+				<ul class="linkSocial_ul">
+					<p class="linkSocial_title blind">소셜 미디어 링크 영역</p>
+					<li class="linkSocial_li linkSocial_blog">
+						<a href="http://mediask.co.kr/" class="linkSocial_a" target="_blank" title="블로그로 이동"><span class="blind">블로거</span></a>
+					</li>
+					<li class="linkSocial_li linkSocial_facebook">
+						<a href="https://www.facebook.com/mediask" class="linkSocial_a" target="_blank" title="페이스북으로 이동"><span class="blind">페이스북</span></a>
+					</li>
+					<li class="linkSocial_li linkSocial_twitter">
+						<a href="https://twitter.com/skstory_blog" class="linkSocial_a" target="_blank" title="트위터로 이동"><span class="blind">트위터</span></a>
+					</li>
+				</ul>
+				<!-- 언어 변경 링크 -->
+				<div class="linkLang_area">
+					<a href="#linkLang_AREA" id="linkLang_openBtn_AREA" class="linkLang_title" onclick="showLangMenu();"><span class="blind">언어변경 현재언어 한국어</span>KOR</a>
+					<ul id="linkLang_AREA" class="linkLang_ul">
+						<li class="linkLang_li linkLang_ko">
+							<a href="/ko/index.jsp" class="linkLang_a" title="한국어 페이지로 이동">KOR</a>
+						</li>
+						<li class="linkLang_li linkLang_en">
+							<a href="/en/index.jsp" class="linkLang_a" title="영문 페이지로 이동">ENG</a>
+						</li>
+						<li class="linkLang_li linkLang_zh">
+							<a href="/zh/index.jsp" class="linkLang_a" title="중문 페이지로 이동">CHN</a>
+						</li>
+					</ul>
+				</div>
+				<!-- 퀵링크 링크 -->
+				<div class="linkFamily_area">
+					<a href="#linkFamily_popup_AREA" id="linkFamily_openBtn_AREA" class="linkFamily_title" onclick="showFamilyPopup();">QUICK LINK<span class="blind">퀵링크 열기</span></a>
+				</div>
+			</div>
+			<!-- 모바일 퀵링크 링크 -->
+			<a href="#linkFamily_popup_AREA" id="topMobileFamily_btn_AREA" class="layout_topMobileFamily_btn" title="퀵링크 열기" onclick="showFamilyPopup();"></a>
+		</div>
+		<!-- 모바일 서브메뉴 시작 // -->
+		<div class="mSubMenu_wrap only_mobile">
+			<button class="mSub_ul_title" title="서브메뉴 닫힘"></button>
+			<ul class="mSub_ul mSub_about">
+				<li class="mSub_li mSub_history"><a href="/ko/about/history.jsp" class="mSub_a">SK역사</a></li>
+				<li class="mSub_li mSub_skms"><a href="/ko/about/skms.jsp" class="mSub_a">SKMS</a></li>
+				<li class="mSub_li mSub_supex"><a href="/ko/about/supex.jsp" class="mSub_a">SUPEX추구협의회</a></li>
+				<li class="mSub_li mSub_affiliates"><a href="/ko/about/affiliates.jsp" class="mSub_a">계열사</a></li>
+			</ul>
+			<ul class="mSub_ul mSub_media">
+				<li class="mSub_li mSub_news"><a href="/ko/media/news.jsp" class="mSub_a">SK뉴스</a></li>
+				<li class="mSub_li mSub_channel"><a href="/ko/media/channel.jsp" class="mSub_a">소셜미디어</a></li>
+				<li class="mSub_li mSub_ci"><a href="/ko/media/ci.jsp" class="mSub_a">CI</a></li>
+			</ul>
+			<ul class="mSub_ul mSub_together">
+				<!-- mib190405 텍스트 수정// --><li class="mSub_li mSub_happiness"><a href="/ko/together/happiness.jsp" class="mSub_a">사회적 가치 추구</a></li><!-- //mib190405 텍스트 수정 -->
+				<li class="mSub_li mSub_social"><a href="/ko/together/social.jsp" class="mSub_a">사회적 기업</a></li>
+				<li class="mSub_li mSub_programs"><a href="/ko/together/programs.jsp" class="mSub_a">사회공헌 프로그램</a></li>
+				<li class="mSub_li mSub_foundation"><a href="/ko/together/foundation.jsp" class="mSub_a">재단활동</a></li>
+			</ul>
+			<ul class="mSub_ul mSub_careers">
+				<li class="mSub_li mSub_person"><a href="/ko/careers/person.jsp" class="mSub_a">인재상</a></li>
+				<li class="mSub_li mSub_policy"><a href="/ko/careers/policy.jsp" class="mSub_a">채용제도</a></li>
+				<!-- <li class="mSub_li mSub_notice"><a href="/ko/careers/notice.jsp" class="mSub_a">채용공고</a></li> -->
+			</ul>
+		</div>
+	</header><!-- //공통 헤더 끝 -->
+
+
+	<!--인덱스 본문 시작-->
+	<main class="layout_main">
+		<section class="layout_content">
+			<h1 class="skipArea" id="skipContent" tabindex="0">본문</h1>
+			<!--인덱스 페이지 인트로 영역-->
+			<section class="layout_grid_full main_section01">
+				<h1 class="blind">인트로</h1>
+				<div class="main_slider"> <!-- only_desktop 클래스 삭제 -->
+				<!-- top banner //-->
+
+
+					<article class="main_cont01 slide01">
+						<div class="main_cont01_img only_desktop" style="background:url('/upload/banner/20180509/20180509173423(0).jpg');background-size:cover;background-position:center;"></div>
+						<div class="main_cont01_img only_mobile" style="background:url('/upload/banner/20180509/20180509173433(0).jpg');background-size:cover;background-position:center;"></div>
+						<div class="main_cont01_videoWrap only_desktop" tabindex="-1">
+							<iframe src="https://player.vimeo.com/video/266838858?background=1&autoplay=1&loop=1&title=0&byline=0&portrait=0" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen class="main_cont01_video" title="내용 없음" tabindex="-1"></iframe>
+						</div>
+						<!-- mib181112 태그 변경 (링크 임시 제거)// -->
+						<div href="#" class="main_cont01_slide_a" target='_self'  title="함께, 행복의 크기를 키우겠습니다">
+							<h1 class="main_cont01_title">함께, 행복의 크기를 키우겠습니다</h1>
+							<!-- mib180509 gif제거// <img class="main_cont01_title_ani" src="/lib/images/mobile/index_ani.gif" alt=""> //mib180509 gif제거 -->
+						</div>
+						<!-- //mib181112 태그 변경 -->
+					</article>
+			
+<!--
+					<article class="main_cont01 slide01">
+						<div class="main_cont01_img only_desktop" style="background:url(/lib/images/desktop/index_main1.jpg);background-size:cover;background-position:center;"></div>
+						<div class="main_cont01_img only_mobile" style="background:url(/lib/images/mobile/index_main1.jpg);background-size:cover;background-position:center;"></div>
+						<div class="main_cont01_videoWrap only_desktop" tabindex="-1">
+							<iframe src="https://player.vimeo.com/video/245863359?background=1&autoplay=1&loop=1&title=0&byline=0&portrait=0" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen class="main_cont01_video" title="내용 없음" tabindex="-1"></iframe>
+						</div>
+						<a href="" class="main_cont01_slide_a" target="_blank">
+							<h1 class="main_cont01_title">공유와 협력. 자율과 책임. 따로 또 같이</h1>
+							<img class="main_cont01_title_ani" src="/lib/images/mobile/index_ani.gif" alt="">
+						</a>
+					</article>
+					<article class="main_cont01 slide02">
+						<div class="main_cont01_img only_desktop" style="background:url(/lib/images/desktop/index_main2.jpg);background-size:cover;background-position:center;"></div>
+						<div class="main_cont01_img only_mobile" style="background:url(/lib/images/mobile/index_main2.jpg);background-size:cover;background-position:center;"></div>
+						<a href="" class="main_cont01_slide_a" target="_blank">
+							<h1 class="main_cont01_title">자율과 책임.</h1>
+							<img class="main_cont01_title_ani" src="/lib/images/mobile/index_ani.gif" alt="">
+						</a>
+					</article>
+					<article class="main_cont01 slide03">
+						<div class="main_cont01_img only_desktop" style="background:url(/lib/images/desktop/index_main3.jpg);background-size:cover;background-position:center;"></div>
+						<div class="main_cont01_img only_mobile" style="background:url(/lib/images/mobile/index_main3.jpg);background-size:cover;background-position:center;"></div>
+						<a href="" class="main_cont01_slide_a" target="_blank">
+							<h1 class="main_cont01_title">SK는 착한욕심을 가진 사회적 기업의 힘을 믿습니다</h1>
+							<img class="main_cont01_title_ani" src="/lib/images/mobile/index_ani.gif" alt="">
+						</a>
+					</article> -->
+<!--// top banner -->
+				</div>
+				<!-- mib180509 스크롤이미지 삭제// <button title="더보기" class="main_cont01_moreBtn"></button> //mib180509 스크롤이미지 삭제 -->
+			</section>
+			<!--인덱스 페이지 Gateway 영역-->
+			<section class="layout_grid_wrap main_section02">
+				<h1 class="main_section_h"><span class="pointColor">SK</span> <br class="only_mobile">GATEWAY</h1>
+				<article id="gateway_AREA01" class="layout_grid_cont3 main_cont02">
+					<a href="/ko/media/news.jsp" class="main_cont_a" title="SK뉴스로 이동">
+						<div class="main_cont_bg" data-parallax='{"y": -210, "distance": 800,"smoothness": 10}'></div>
+						<h1 class="main_cont_title">SK의 다양한 소식을<br>전합니다</h1>
+						<p class="main_cont_link"><span class="point">SK뉴스</span> 바로가기</p>
+						<div class="lineAni">
+							<div class="lineAni_top"></div>
+							<div class="lineAni_right"></div>
+							<div class="lineAni_bottom"></div>
+							<div class="lineAni_left"></div> 
+						</div>
+					</a>
+				</article>
+				<article id="gateway_AREA02" class="layout_grid_cont3 main_cont03">
+					<a href="/ko/about/affiliates.jsp" class="main_cont_a" title="계열사로 이동">
+						<div class="main_cont_bg" data-parallax='{"y": -210, "distance": 800,"smoothness": 10}'></div>
+						<h1 class="main_cont_title">따로 또 같이 <br>우리는 SK 입니다</h1>
+						<p class="main_cont_link"><span class="point">계열사</span> 바로가기</p>
+						<div class="lineAni">
+							<div class="lineAni_top"></div>
+							<div class="lineAni_right"></div> 
+							<div class="lineAni_bottom"></div>
+							<div class="lineAni_left"></div>
+						</div> 
+					</a> 
+				</article>
+				<article id="gateway_AREA03" class="layout_grid_cont3 main_cont04">
+					<a href="/ko/careers/careers.jsp" class="main_cont_a" title="채용으로 이동">
+						<div class="main_cont_bg" data-parallax='{"y": -210, "distance": 800,"smoothness": 10}'></div>
+						<h1 class="main_cont_title">사람이 자원인 나라 <br>그 사람을 키우는 SK</h1>
+						<p class="main_cont_link"><span class="point">채용</span> 바로가기</p>
+						<div class="lineAni">
+							<div class="lineAni_top"></div>
+							<div class="lineAni_right"></div>
+							<div class="lineAni_bottom"></div>
+							<div class="lineAni_left"></div>
+						</div>
+					</a>
+				</article>
+			</section>
+			<!--인덱스 페이지 Hightlight 영역-->
+			<section class="layout_grid_wrap main_section03">
+				<h1 class="main_section_h"><span class="pointColor">SK</span> <br class="only_mobile">HIGHLIGHT</h1>
+				<!-- high light //-->
+
+
+				<article id="highlight_AREA01" class="layout_grid_cont2 main_news01">
+					<a href="http://www.sk.co.kr/ko/media/news_view.jsp?idx=1310" class="main_news_a" target='_self' title="[SK뉴스] 최태원 회장, “AI·5G 사업 핵심은 고객과 신뢰 관계 구축”">
+						<div class="main_news_bg">
+							<!-- div class="main_news_bg_img" style="background:url('/upload/banner/20190605/20190605113427(0).jpg');background-size:cover;background-position:center;"></div-->							 
+							<div class="main_news_bg_img only_mobile" style="background:url('/upload/banner/20190605/20190605113434(0).jpg');background-size:cover;background-position:center;"></div>
+							<div class="main_news_bg_img only_desktop" style="background:url('/upload/banner/20190605/20190605113427(0).jpg');background-size:cover;background-position:center;"></div>							 
+							<div class="main_news_bg_dimmed"></div>
+						</div>
+						<h1 class="main_news_title">[SK뉴스] 최태원 회장, “AI·5G 사업 핵심은 고객과 신뢰 관계 구축”</h1>
+						<img class="main_news_link" src="/lib/images/desktop/right_arrow.png" alt="">
+					</a>
+				</article>		
+		
+				<article id="highlight_AREA02" class="layout_grid_cont2 main_news02">
+					<a href="http://www.sk.co.kr/ko/media/news_view.jsp?idx=1302" class="main_news_a" target='_self' title="[SK뉴스] 소셜밸류커넥트(SOVAC) 첫 회부터 성황">
+						<div class="main_news_bg">
+							<!-- div class="main_news_bg_img" style="background:url('/upload/banner/20190530/20190530095716(0).jpg');background-size:cover;background-position:center;"></div-->							 
+							<div class="main_news_bg_img only_mobile" style="background:url('/upload/banner/20190530/20190530095722(0).jpg');background-size:cover;background-position:center;"></div>
+							<div class="main_news_bg_img only_desktop" style="background:url('/upload/banner/20190530/20190530095716(0).jpg');background-size:cover;background-position:center;"></div>							 
+							<div class="main_news_bg_dimmed"></div>
+						</div>
+						<h1 class="main_news_title">[SK뉴스] 소셜밸류커넥트(SOVAC) 첫 회부터 성황</h1>
+						<img class="main_news_link" src="/lib/images/desktop/right_arrow.png" alt="">
+					</a>
+				</article>		
+		
+				<article id="highlight_AREA03" class="layout_grid_cont2 main_news03">
+					<a href="http://mediask.co.kr/37034" class="main_news_a" target='_blank' title="[MEDIA SK] 말로만 듣던 사회적 가치, 어떻게 측정하죠?">
+						<div class="main_news_bg">
+							<!-- div class="main_news_bg_img" style="background:url('/upload/banner/20190605/20190605113644(0).jpg');background-size:cover;background-position:center;"></div-->							 
+							<div class="main_news_bg_img only_mobile" style="background:url('/upload/banner/20190605/20190605113650(0).jpg');background-size:cover;background-position:center;"></div>
+							<div class="main_news_bg_img only_desktop" style="background:url('/upload/banner/20190605/20190605113644(0).jpg');background-size:cover;background-position:center;"></div>							 
+							<div class="main_news_bg_dimmed"></div>
+						</div>
+						<h1 class="main_news_title">[MEDIA SK] 말로만 듣던 사회적 가치, 어떻게 측정하죠?</h1>
+						<img class="main_news_link" src="/lib/images/desktop/right_arrow.png" alt="">
+					</a>
+				</article>		
+		
+				<article id="highlight_AREA04" class="layout_grid_cont2 main_news04">
+					<a href="https://youtu.be/Q6dmXwvVnk0" class="main_news_a" target='_blank' title="[SK광고] OK!SK 광고 함께편 광고 코멘터리">
+						<div class="main_news_bg">
+							<!-- div class="main_news_bg_img" style="background:url('/upload/banner/20180427/20180427174905(0).jpg');background-size:cover;background-position:center;"></div-->							 
+							<div class="main_news_bg_img only_mobile" style="background:url('/upload/banner/20180427/20180427174909(0).jpg');background-size:cover;background-position:center;"></div>
+							<div class="main_news_bg_img only_desktop" style="background:url('/upload/banner/20180427/20180427174905(0).jpg');background-size:cover;background-position:center;"></div>							 
+							<div class="main_news_bg_dimmed"></div>
+						</div>
+						<h1 class="main_news_title">[SK광고] OK!SK 광고 함께편 광고 코멘터리</h1>
+						<img class="main_news_link" src="/lib/images/desktop/right_arrow.png" alt="">
+					</a>
+				</article>		
+		<!--// high light -->
+				</section>
+		</section>
+	</main><!--인덱스 본문 끝-->
+	
+	<!-- 메인용 스크립트 추가 -->
+	<script src="/lib/plugin/slick.js"></script>
+	<script src="/lib/plugin/jquery.easing.1.3.js"></script>
+	<script src="/lib/plugin/jquery.parallax-scroll.js"></script>
+	<script src="/lib/plugin/noframework.waypoints.min.js"></script>
+	<script>
+		$(function(){
+			//메인 슬라이더
+			$(".main_slider").slick({
+				autoplay:false,
+				fade:true,
+				dots:true,
+				responsive:[{
+					breakpoint: 1024,
+					settings: {
+						arrows:false,
+						initialSlide:0,
+						slidesToShow: 1,
+						slidesToScroll: 1,
+						infinite: true
+					}
+				}]
+			});
+			//슬라이더 마우스 아이콘 클릭
+			/*mib180509 스크롤이미지 삭제//$('.main_cont01_moreBtn').click(btnMore);//mib180509 스크롤이미지 삭제*/			
+			//웨이포인트(게이트웨이01)
+			var wpGateway01 = new Waypoint({
+				element: document.getElementById('gateway_AREA01'),
+				handler: function (direction) {
+					if (direction == 'down') {
+						$('.main_cont02').addClass("appeared");
+					} else {
+						$('.main_cont02').removeClass("appeared");
+					}
+				},
+				offset: '80%'
+			});			
+			//웨이포인트(게이트웨이02)
+			var wpGateway02 = new Waypoint({
+				element: document.getElementById('gateway_AREA02'),
+				handler: function (direction) {
+					if (direction == 'down') {
+						$('.main_cont03').addClass("appeared");
+					} else {
+						$('.main_cont03').removeClass("appeared");
+					}
+				},
+				offset: '80%'
+			});			
+			//웨이포인트(게이트웨이01)
+			var wpGateway03 = new Waypoint({
+				element: document.getElementById('gateway_AREA03'),
+				handler: function (direction) {
+					if (direction == 'down') {
+						$('.main_cont04').addClass("appeared");
+					} else {
+						$('.main_cont04').removeClass("appeared");
+					}
+				},
+				offset: '80%'
+			});
+			//웨이포인트(하이라이트01)
+			if(Boolean(document.getElementById('highlight_AREA01'))){			
+				var wpHightlight01 = new Waypoint({
+					element: document.getElementById('highlight_AREA01'),
+					handler: function (direction) {
+						if (direction == 'down') {
+							$('.main_news01').addClass("appeared");
+						} else {
+							$('.main_news01').removeClass("appeared");
+						}
+					},
+					offset: '80%'
+				});
+			}
+			//웨이포인트(하이라이트02)
+			if(Boolean(document.getElementById('highlight_AREA02'))){			
+				var wpHightlight01 = new Waypoint({
+					element: document.getElementById('highlight_AREA02'),
+					handler: function (direction) {
+						if (direction == 'down') {
+							$('.main_news02').addClass("appeared");
+						} else {
+							$('.main_news02').removeClass("appeared");
+						}
+					},
+					offset: '80%'
+				});
+			}
+			//웨이포인트(하이라이트03)
+			if(Boolean(document.getElementById('highlight_AREA03'))){			
+				var wpHightlight01 = new Waypoint({
+					element: document.getElementById('highlight_AREA03'),
+					handler: function (direction) {
+						if (direction == 'down') {
+							$('.main_news03').addClass("appeared");
+						} else {
+							$('.main_news03').removeClass("appeared");
+						}
+					},
+					offset: '80%'
+				});
+			}
+			//웨이포인트(하이라이트04)
+			if(Boolean(document.getElementById('highlight_AREA04'))){	
+				var wpHightlight01 = new Waypoint({
+					element: document.getElementById('highlight_AREA04'),
+					handler: function (direction) {
+						if (direction == 'down') {
+							$('.main_news04').addClass("appeared");						
+						} else {
+							$('.main_news04').removeClass("appeared");
+						}
+					},
+					offset: '80%'
+				});
+			}
+			//하이라이트 영역 미디어 링크일 때 아이콘 변경
+			chkMediaLink();
+			//메인 슬라이더 개수에 맞춘 다음 버튼 위치
+			mainSliderNextBtnPos();//호출
+			//메인 타이틀 변경
+			changeTitle();
+			$(window).resize(changeTitle);
+		});
+		//메인 타이틀 모바일에서 변경(추후 운영 시 해제)
+		function changeTitle(){
+			var $windowW = $(window).width();
+			if( $windowW < 1200){
+				/*mib180509 텍스트 수정//*/
+				$('.main_cont01.slide01 .main_cont01_title').html("");
+				/*//mib180509 텍스트 수정*/	
+			}else{
+				/*mib180509 텍스트 수정//*/
+				$('.main_cont01.slide01 .main_cont01_title').html("");
+				/*//mib180509 텍스트 수정*/
+			}
+		}
+		//메인 컨텐츠-더보기 버튼
+		function btnMore(){
+			var $offsetTop = parseInt($('.main_section02').offset().top)-parseInt($('.layout_header').height());
+			$("html, body").stop().animate({scrollTop:$offsetTop});
+			$('.main_section_h').focus();
+		}
+		//미디어 링크 확인
+		function chkMediaLink (){
+			$('.main_news_a').each(function(index,item){
+				var $href = $(item).attr("href");
+				$href = $href.toLowerCase();
+				if($href.indexOf("youtu") != -1){ /*동영상 사이트 링크 문자열*/
+					$(item).find(".main_news_link").attr("src","/lib/images/desktop/right_triangle.png");
+			    }
+			});
+		}
+		//메인 슬라이더 개수에 맞춘 다음 버튼 위치
+		function mainSliderNextBtnPos(){
+			var $sliderNum = parseInt($('.main_cont01.slick-slide').length)-1;
+			var $distance = $sliderNum*17;
+			$('.main_slider .slick-next').css({'left':100+$distance});
+		}
+	</script>
+
+	<!-- 팝업 지역 시작 -->
+	<section id="dimmed_AREA" class="dimmed_bg" tabindex="-1">
+		<h1 class="blind">팝업 컨텐츠</h1>
+		<!-- 팝업 컨텐츠01 샘플 -->
+		<article class="popupContent sample_cont01_popup" tabindex="-1">
+			<a href="#about_cont03_openBtn_AREA" class="popup_close_btn" title="팝업 닫기" onclick="hidePopup();"></a>
+			<div class="popup_area">
+				<h1>팝업1</h1>
+				<a href="/">링크요소1</a>
+				<a href="/">링크요소2</a>
+				<a href="/">링크요소3</a>
+			</div>
+		</article>
+	</section><!-- 팝업 지역 끝 --> 
+	
+
+	
+	<!-- 퀵링크 팝업 -->
+	<script type="text/javascript">
+		function initFamilyCo(){
+			$("#com_fc_name").val("");
+			loadFamilyCo();
+		}
+
+		// 계열사 조회
+		function loadFamilyCo(){
+			var strUrl = "/ko/common/load_family_co_01.jsp";
+			var dataString = $("#srcFcForm").serialize();
+			
+			$.ajax({
+				url: strUrl,
+				type: "post",
+				data: dataString,
+				timeout: 5000,
+				tryCount: 0,
+				retryLimit: 3,
+				error: function(xhr, status, e) {
+					if (xhr.status == 500) {
+						console.log('데이터 조회 중 오류.');						
+					} else {
+						this.tryCount++;
+		
+						if (this.tryCount <= this.retryLimit) {
+							$.ajax(this);
+						} else {
+							console.log('데이터 조회 중 오류.');								
+						}
+					}
+				},
+				beforeSubmit: function() {						
+				},
+				success: function(data) {					
+					$("#listBodyF01").html(data);				
+
+					$('.linkFamily_a').click(showlinkFamilySub);
+					$('.linkFamilySub_calcel_btn').click(hidelinkFamilySub);
+					//console.log(data);		
+					tryCount = 0;
+				}
+			});			
+		}	
+
+		// 관련사이트 조회
+		function loadFamilyCoRel(){
+			var strUrl = "/ko/common/load_family_co_02.jsp";
+			var dataString = "";
+			
+			$.ajax({
+				url: strUrl,
+				type: "post",
+				data: dataString,
+				timeout: 5000,
+				tryCount: 0,
+				retryLimit: 3,
+				error: function(xhr, status, e) {
+					if (xhr.status == 500) {
+						console.log('데이터 조회 중 오류.');						
+					} else {
+						this.tryCount++;
+		
+						if (this.tryCount <= this.retryLimit) {
+							$.ajax(this);
+						} else {
+							console.log('데이터 조회 중 오류.');								
+						}
+					}
+				},
+				beforeSubmit: function() {						
+				},
+				success: function(data) {					
+					$("#listBodyF02").html(data);				
+
+					$('.linkFamily_a').click(showlinkFamilySub);
+					$('.linkFamilySub_none').unbind("click");
+					$('.linkFamilySub_calcel_btn').click(hidelinkFamilySub);
+					//console.log(data);		
+					tryCount = 0;
+				}
+			});			
+		}		
+		
+		function schFamilyCo(){
+			if($("#com_fc_name").val() == ""){
+				alert("검색하시려는 계열사 이름을 입력하세요.");
+				$("#com_fc_name").focus();
+				return;
+			}else loadFamilyCo();
+		}
+	</script>
+	<div id="linkFamily_popup_AREA" class="linkFamily_popup_wrap">
+		<div class="familyPopupBg" onclick="hideFamilyPopup();"></div>
+		<div class="linkFamily_popup_content firstTab">
+			<button class="linkFamily_exitPrevent blind" data-name=".linkFamily_closeBtn">팝업이 아직 열린 상태입니다</button>
+			<a href="#linkFamily_openBtn_AREA" class="linkFamily_closeBtn" title="퀵링크 닫기" onclick="hideFamilyPopup();">닫기</a>
+			<div class="linkFamily_tabNav_wrap">
+				<button class="linkFamily_tabNav firstTabNav tabOn"  onclick="initFamilyCo()">계열사</button>
+				<button class="linkFamily_tabNav secondTabNav" onclick="loadFamilyCoRel()">관련사이트</button>
+			</div>
+			<div class="linkFamily_tabContent_wrap">
+				<div class="linkFamily_tabContent firstTabCont tabOn">
+					<div class="linkFamily_search_wrap">
+						<form id="srcFcForm"  name="srcFcForm" method="post"  onsubmit="return false;">
+							<label for="com_fc_name" class="blind">계열사 검색어 입력</label>
+							<input type="text" id="com_fc_name" name="com_fc_name" class="linkFamily_searchInput" placeholder="계열사 검색하기"  maxlength="30"/>
+							<button class="linkFamily_searchBtn" title="Search"  onclick="schFamilyCo()"></button>
+						</form>
+					</div>
+					<ul class="linkFamily_ul" id="listBodyF01"></ul><!-- 계열사 목록 -->
+				</div>
+				<div class="linkFamily_tabContent secondTabCont">
+					<ul class="linkFamily_ul" id="listBodyF02"></ul><!-- 관련사이트 목록 -->
+				</div>
+				<button class="linkFamily_exitPrevent blind" data-name=".linkFamily_closeBtn">팝업이 아직 열린 상태입니다</button>
+			</div>
+		</div>
+	</div><!-- //퀵링크 팝업 끝 -->
+
+
+	<!-- 공통 푸터 시작 -->
+	<footer class="layout_footer">
+		<div class="layout_footer_inner">
+			<h2 class="blind">푸터 메뉴</h2>
+			<!-- 푸터 좌측(로고) 영역 -->
+			<div class="layout_footerLeft">
+				<a href="/ko/index.jsp" class="footerlogo_a"><img src="/lib/images/desktop/footer_logo.png" alt="홈" class="footerLogo_img"></a>
+			</div>
+			<!-- 푸터 중앙 영역 -->
+			<div class="layout_footerCenter">
+				<ul class="footer_menu">
+					<li class="footer_munu_li only_desktop"><a href="/ko/sitemap.jsp" class="footer_menu_a">사이트맵</a></li>
+				</ul>
+				<address class="footer_address">서울특별시 종로구 종로 26 <br class="only_mobile"><span class="copyright">COPYRIGHT (C) BY SK HOLDINGS. <br class="only_mobile">ALL RIGHT RESERVED.</span></address>
+			</div>
+			<!-- 푸터 우측 영역 -->
+			<a href="http://www.webwatch.or.kr/Situation/WA_Situation.html?MenuCD=110" class="layout_footerRight" title="국가 공인 인증기관 : 웹와치" target="_blank">
+				<img src="/lib/images/desktop/footer_access.png" alt="과학기술정보통신부 WEB ACCESSIBILITY 마크(웹 접근성 품질인증 마크)" class="footerAccess_img">
+			</a>
+		</div>
+	</footer><!-- //공통 푸터 끝 -->
+	<!--  공통 모바일 메뉴 시작 -->
+	<nav id="sideMenu_AREA" tabindex="-1" class="layout_sideMenu">
+		<button class="sideMenu_exitPrevent blind" data-name=".sideMenu_close_btn">팝업이 아직 열린 상태입니다</button>
+		<h1 class="blind">모바일 사이드 메뉴</h1>
+		<div class="sideMenu_bg"></div>
+		<div class="sideMenu_wrap">
+			<a href="#topMobile_btn_AREA" class="sideMenu_close_btn" title="모바일 메뉴 닫기">닫기</a>
+			<!-- 모바일 언어 변경 영역 -->
+			<ul class="mLinkLang_ul">
+				<li class="mLinkLang_li mLinkLang_ko on">
+					<a href="/ko/index.jsp" class="mLinkLang_a">KOR</a>
+				</li>
+				<li class="mLinkLang_li mLinkLang_en">
+					<a href="/en/index.jsp" class="mLinkLang_a">ENG</a>
+				</li>
+				<li class="mLinkLang_li mLinkLang_zh">
+					<a href="/zh/index.jsp" class="mLinkLang_a">CHN</a>
+				</li>
+			</ul>
+			<!-- 모바일 검색 영역 -->
+			<form id="schNews_m" name="schNews" method="post" action="/ko/media/news.jsp" class="mLinkSearch_area">				
+				<label for="mSnbSearch" class="blind">SK뉴스를 검색하세요.</label>
+				<input type="hidden" name="s_kind" value="t1.subject">
+				<input type="text" id="mSnbSearch" name="s_value"  class="mLinkSearch_input" placeholder="SK뉴스를 검색하세요."  maxlength="30"/>
+				<input type="reset" class="mLinkDelete_btn" title="검색어 모두 삭제" value="">
+				<input type="submit" class="mLinkSearch_submit" title="검색 요청" value="" id="schNewsBtn_m"/>
+			</form>
+			
+			<!-- 모바일 메뉴 영역 -->
+			<ul class="mTopNav_ul">
+				<li class="mTopNav_li mTopNav_about on">
+					<button class="mTopNav_a">SK소개</button>
+					<ul class="mTopNavSub_ul">
+						<li class="mTopNavSub_li mTopNavSub_about"><a href="/ko/about/about.jsp" class="mTopNavSub_a">SK소개 메인</a></li>
+						<li class="mTopNavSub_li mTopNavSub_history"><a href="/ko/about/history.jsp" class="mTopNavSub_a">SK역사</a></li> 
+						<li class="mTopNavSub_li mTopNavSub_skms"><a href="/ko/about/skms.jsp" class="mTopNavSub_a">SKMS</a></li>
+						<li class="mTopNavSub_li mTopNavSub_supex"><a href="/ko/about/supex.jsp" class="mTopNavSub_a">SUPEX추구협의회</a></li>
+						<li class="mTopNavSub_li mTopNavSub_affiliates"><a href="/ko/about/affiliates.jsp" class="mTopNavSub_a">계열사</a></li>
+					</ul>
+				</li>
+				<li class="mTopNav_li mTopNav_media">
+					<button class="mTopNav_a">MEDIA센터</button>
+					<ul class="mTopNavSub_ul">
+						<li class="mTopNavSub_li mTopNavSub_media"><a href="/ko/media/media.jsp" class="mTopNavSub_a">MEDIA센터 메인</a></li>
+						<li class="mTopNavSub_li mTopNavSub_news"><a href="/ko/media/news.jsp" class="mTopNavSub_a">SK뉴스</a></li>
+						<li class="mTopNavSub_li mTopNavSub_channel"><a href="/ko/media/channel.jsp" class="mTopNavSub_a">소셜미디어</a></li>
+						<li class="mTopNavSub_li mTopNavSub_ci"><a href="/ko/media/ci.jsp" class="mTopNavSub_a">CI</a></li>
+					</ul>
+				</li>
+				<li class="mTopNav_li mTopNav_together">
+					<!-- mib190405 텍스트 수정// --><button class="mTopNav_a">사회적 가치</button><!-- //mib190405 텍스트 수정 -->
+					<ul class="mTopNavSub_ul">
+						<!-- mib190405 텍스트 수정// --><li class="mTopNavSub_li mTopNavSub_together"><a href="/ko/together/together.jsp" class="mTopNavSub_a">사회적 가치 메인</a></li><!-- //mib190405 텍스트 수정 -->
+						<!-- mib190405 텍스트 수정// --><li class="mTopNavSub_li mTopNavSub_happiness"><a href="/ko/together/happiness.jsp" class="mTopNavSub_a">사회적 가치 추구</a></li><!-- //mib190405 텍스트 수정 -->
+						<li class="mTopNavSub_li mTopNavSub_social"><a href="/ko/together/social.jsp" class="mTopNavSub_a">사회적 기업</a></li>
+						<li class="mTopNavSub_li mTopNavSub_programs"><a href="/ko/together/programs.jsp" class="mTopNavSub_a">사회공헌 프로그램</a></li>
+						<li class="mTopNavSub_li mTopNavSub_foundation"><a href="/ko/together/foundation.jsp" class="mTopNavSub_a">재단활동</a></li>
+					</ul>
+				</li>
+				<li class="mTopNav_li mTopNav_careers">
+					<button class="mTopNav_a">채용</button>
+					<ul class="mTopNavSub_ul">
+						<li class="mTopNavSub_li mTopNavSub_careers"><a href="/ko/careers/careers.jsp" class="mTopNavSub_a">채용 메인</a></li>
+						<li class="mTopNavSub_li mTopNavSub_person"><a href="/ko/careers/person.jsp" class="mTopNavSub_a">인재상</a></li>
+						<li class="mTopNavSub_li mTopNavSub_policy"><a href="/ko/careers/policy.jsp" class="mTopNavSub_a">채용제도</a></li>
+					</ul>
+				</li>
+			</ul>
+			<!-- 모바일 소셜미디어 링크 -->
+			<ul class="mLinkSocial_ul">
+				<li class="mLinkSocial_li mLinkSocial_blog">
+					<a href="http://mediask.co.kr/" class="mLinkSocial_a" title="블로그로 이동" target="_blank"><span class="blind">블로거</span></a>
+				</li>
+				<li class="mLinkSocial_li mLinkSocial_facebook">
+					<a href="https://www.facebook.com/mediask" class="mLinkSocial_a" title="페이스북으로 이동" target="_blank"><span class="blind">페이스북</span></a>
+				</li>
+				<li class="mLinkSocial_li mLinkSocial_twitter">
+					<a href="https://twitter.com/skstory_blog" class="mLinkSocial_a" title="트위터로 이동" target="_blank"><span class="blind">트위터</span></a>
+				</li>
+			</ul>
+		</div>
+		<button class="sideMenu_exitPrevent blind" data-name=".sideMenu_close_btn">팝업이 아직 열린 상태입니다</button>
+	</nav>
+	<!--  //공통 모바일 메뉴 끝 -->
+	
+	<!-- 공통 스크립트 -->
+	<script src="/lib/script/common.js"></script>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-51827617-2"></script>
+	<script>
+		 window.dataLayer = window.dataLayer || [];
+		 function gtag(){dataLayer.push(arguments);}
+		 gtag('js', new Date());
+		 gtag('config', 'UA-51827617-2');
+	</script>
+</body>
+</html>
+

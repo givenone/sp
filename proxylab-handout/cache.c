@@ -5,7 +5,7 @@
 void init()
 {
     sum_of_cache = 0;
-    rear = front = NULL;
+    rear = (front = NULL);
 }
 
 cnode *find(char *uri)
@@ -15,7 +15,7 @@ cnode *find(char *uri)
     for(temp = front; temp != NULL; temp = temp->next)
     {
         printf("uri: %s \n THIS IS CACHE", temp-> uri);
-        if(!strncmp(temp->uri, uri, strlen(uri)))
+        if(!strcmp(temp->uri, uri))
         {   // cache HIT -> should be back
 
             if(temp == front)
@@ -24,6 +24,8 @@ cnode *find(char *uri)
                 if(rear != NULL)    rear->next = temp;
                 temp->prev = rear;
                 rear = temp;
+                front = temp->next;
+                temp->next = NULL;
             }
             else if(temp == rear); // do nothing
             else
@@ -80,7 +82,7 @@ void add_cache(char *uri, char *content)
 	sum_of_cache += strlen(content);
 	
 	// Add new block to linked list
-	if(rear == NULL) front = rear = new_block;
+	if(rear == NULL) front = (rear = new_block);
 	else {
 		rear->next = new_block;
         new_block->prev = rear;
