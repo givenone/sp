@@ -443,7 +443,6 @@ void mm_free(void *ptr)
     PUT(FTRP(ptr), PACK(size, 0));
     insertion(ptr, size);
     coalesce(ptr);
-
 }
 
 /*
@@ -458,8 +457,6 @@ void *mm_realloc(void *ptr, size_t size)
         return NULL;
 
     new_size = MAX(ALIGN(size+DSIZE), 2*DSIZE);
-
-    //new_size += (1<<7);
 
     if (GET_SIZE(HDRP(ptr)) < new_size) 
     {
@@ -496,11 +493,6 @@ void *mm_realloc(void *ptr, size_t size)
         mm_free(NEXT_BLKP(ptr));
     }
     */
-/*
-   if(GET_SIZE(HDRP(new_ptr)) - new_size < (1<<8))
-   {
-       SET_RATAG(HDRP(NEXT_BLKP(new_ptr)));
-   }*/
-    /// Return the reallocated block 
+
     return new_ptr;
 }
