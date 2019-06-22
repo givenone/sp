@@ -60,10 +60,9 @@
 // My additional Macros
 #define WSIZE     4          // word and header/footer size (bytes)
 #define DSIZE     8          // double word size (bytes)
-#define CHUNKSIZE (1<<6)
+#define CHUNKSIZE (1<<9)
 
-#define LIST_COUNT     24     
-#define REALLOC_BUFFER  0//(1<<7)    // Buffer Size for reallocation
+#define LIST_COUNT 32
 
 #define MAX(x, y) ((x) > (y) ? (x) : (y)) 
 #define MIN(x, y) ((x) < (y) ? (x) : (y)) 
@@ -73,7 +72,7 @@
 
 // Read and write a word at address p 
 #define GET(p)            (*(unsigned int *)(p))
-#define PUT(p, val)       (*(unsigned int *)(p) = (val) )
+#define PUT(p, val)       (*(unsigned int *)(p) = (val))
 
 // Store predecessor or successor pointer for free blocks 
 #define SET_PTR(p, ptr) (*(unsigned int *)(p) = (unsigned int)(ptr))
@@ -81,7 +80,6 @@
 // Read the size and allocation bit from address p 
 #define GET_SIZE(p)  (GET(p) & ~0x7)
 #define GET_ALLOC(p) (GET(p) & 0x1)
-
 // Address of block's header and footer 
 #define HDRP(ptr) ((char *)(ptr) - WSIZE)
 #define FTRP(ptr) ((char *)(ptr) + GET_SIZE(HDRP(ptr)) - DSIZE)
@@ -287,6 +285,7 @@ static void *coalesce(void *ptr)
     size_t next_alloc = GET_ALLOC(HDRP(NEXT_BLKP(ptr)));
     size_t size = GET_SIZE(HDRP(ptr));
     
+
     if (prev_alloc && next_alloc) {                         // Case 1
         return ptr;
     }
@@ -333,14 +332,27 @@ static void *replace(void *ptr, size_t new_size)
         PUT(HDRP(ptr), PACK(ptr_size, 1)); 
         PUT(FTRP(ptr), PACK(ptr_size, 1)); 
     }
-    else {
-        // Split block
-        PUT(HDRP(ptr), PACK(new_size, 1)); 
-        PUT(FTRP(ptr), PACK(new_size, 1)); 
-        PUT(HDRP(NEXT_BLKP(ptr)), PACK(remain, 0)); 
-        PUT(FTRP(NEXT_BLKP(ptr)), PACK(remain, 0)); 
-        insertion(NEXT_BLKP(ptr), remain);
+    else if(new_size >= 64)
+    {
+        PUT(HDRP(ptr), PACK(remain,0));
+        PUT(FTRP(ptr), PACK(remain,0));
+        PUT(HDRP(NEXT_BLKP(ptr)), PACK(new_size,1));
+        PUT(FTRP(NEXT_BLKP(ptr)), PACK(new_size,1));
+        insertion(ptr,remain);
+        return NEXT_BLKP(ptr);
     }
+
+    else
+    {
+        PUT(HDRP(ptr), PACK(new_size,1));
+        PUT(FTRP(ptr), PACK(new_size,1));
+        PUT(HDRP(NEXT_BLKP(ptr)), PACK(remain,0));
+        PUT(FTRP(NEXT_BLKP(ptr)), PACK(remain,0));
+        insertion(NEXT_BLKP(ptr),remain);
+        return ptr;
+    }
+    
+    
     return ptr;
 }
 
@@ -427,7 +439,6 @@ void *mm_malloc(size_t size)
 void mm_free(void *ptr)
 {
     size_t size = GET_SIZE(HDRP(ptr));
- 
     PUT(HDRP(ptr), PACK(size, 0));
     PUT(FTRP(ptr), PACK(size, 0));
     insertion(ptr, size);
@@ -447,6 +458,8 @@ void *mm_realloc(void *ptr, size_t size)
         return NULL;
 
     new_size = MAX(ALIGN(size+DSIZE), 2*DSIZE);
+
+    //new_size += (1<<7);
 
     if (GET_SIZE(HDRP(ptr)) < new_size) 
     {
@@ -483,7 +496,11 @@ void *mm_realloc(void *ptr, size_t size)
         mm_free(NEXT_BLKP(ptr));
     }
     */
-
-    // Return the reallocated block 
+/*
+   if(GET_SIZE(HDRP(new_ptr)) - new_size < (1<<8))
+   {
+       SET_RATAG(HDRP(NEXT_BLKP(new_ptr)));
+   }*/
+    /// Return the reallocated block 
     return new_ptr;
 }
